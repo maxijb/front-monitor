@@ -1,0 +1,77 @@
+<div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="navbar-inner">
+     <a class="brand" href="#">FrontMonitor</a>
+     <ul class='nav' id='applications'>
+             <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-id='<%= params.application %>'> <%= applications[params.application].name %><b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                          <% _.each(applications, function (app) { %>
+                          <li><a href="#" data-id="<%= app.id %>"><%= app.name %></a></li>
+                          <% }) %>
+                        </ul>
+              </li>
+     </ul>
+     
+     <ul class='nav' id='timestamps'>
+             <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-id='<%= params.timeframe %>'> <%= timeframes[params.timeframe].description %><b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                          <% _.each(timeframes, function (timeframe) { %>
+                          <li><a href="#" data-id="<%= timeframe.code %>"><%= timeframe.description %></a></li>
+                          <% }) %>
+                        </ul>
+              </li>
+     </ul>
+  </div>
+</div>
+
+
+<div class='container row show-grid'>
+    
+    <div id='sidebar'>
+        <form>
+          <h2>Search</h2>
+          <label>Find errors by URL: </label>
+          <input type='text' id='url_input'>
+          <label>or by text: </label>
+          <input type='text' id='text_input'>
+          <label>or by UOW: </label>
+          <input type='text' id='uow_input'>
+          <br/>
+          <a class='btn do_search'>Search</a>
+        </form>
+    </div>
+    <div id='graph-container'>
+      <div id='graph'>
+      </div>
+    </div>
+
+
+    <div id='main'>
+        <div class='header'>
+            <h2>Results</h2>
+            <div class='refine'>
+                <span>Cluster by:</span>
+                <input type='checkbox' checked='checked' class='message'><label>Message</label>
+                <input type='checkbox' checked='checked' class='file'><label>File</label>
+                <input type='checkbox' checked='checked' class='line'><label>Line</label>
+                <input type='checkbox' class='name'><label>Name</label>
+                <input type='checkbox' class='name'><label>Browser</label>
+                <input type='checkbox' class='name'><label>OS</label>
+                <a class='btn reload button'>Reload</a>
+            </div>
+        </div>
+        <div id='results'></div>
+    </div>
+
+</div>
+
+
+<div id='popup'>
+  <div class='close'>X</div>
+  <div class="sidebar">  
+      <h4>Cluster errors</h4>
+      <div class="errors"></div>
+  </div>
+  <div class="frame">  </div>
+</div>

@@ -1,0 +1,30 @@
+<table class='table table-hover table-striped'>
+<tr>
+   <th class='quantity'>quantity</td>
+   <th class='since'>since</td>
+   <th class='until'>until</td>
+   <th class='name'>name</td>
+   <th class='message'>message</td>
+   <th class='stack'>stack</td>
+   <th class='event_type'>event_type</td>
+   <th class='event_target'>event_target</td>
+   <th class='browsers'>browsers</td>
+   <th> </td>
+</tr>
+<% _.each(results, function (cluster) { %>
+<tr class='cluster' data-row='<%=cluster.ids%>'>
+	<td class='quantity'><%= cluster.quantity %></td>
+	<td class='since'><%= cluster.since %></td>
+	<td class='until'><%= cluster.until %></td>
+	<td class='name'><%= cluster.name %></td>
+	<td class='message'><%= cluster.message %></td>
+	<td class='stack'><%if (cluster.file) {%><%= cluster.file %>:<%= cluster.line %>:<%= cluster.char %><%}%></td>
+	<td class='event_type'><%= cluster.event_type %></td>
+	<td class='event_target'><%= cluster.event_target %></td>
+	<td class='browsers'><%= cluster.browsers %></td>
+	<td class='details'><a class='btn'>+</a></td>
+</tr>
+
+<% }) %>
+
+</table>

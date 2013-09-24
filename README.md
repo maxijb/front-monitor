@@ -1,0 +1,2 @@
+# opticumJS
+### a Sails application
