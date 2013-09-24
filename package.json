@@ -12,7 +12,8 @@
     "ua-parser-js": "~0.6.2",
     "extend": "~1.2.0",
     "dateformat": "~1.0.6-1.2.3",
-    "errortoenglish-despegar": "0.0.6"
+    "errortoenglish-despegar": "0.0.6",
+    "sails-mysql" : "0.9"
   },
   "scripts": {
     "start": "node app.js",
