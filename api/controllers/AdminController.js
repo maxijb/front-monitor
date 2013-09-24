@@ -92,7 +92,7 @@ var timeframes = {
 
 var extend = require("extend");
 var dateFormat = require("dateformat");
-var errorToEnglish = require("errortoenglish");
+var errorToEnglish = require("errortoenglish-despegar");
 var UAParser = require('ua-parser-js');
 var parser = new UAParser();
 

@@ -7,7 +7,7 @@
  */
 var UAParser = require('ua-parser-js');
 var parser = new UAParser();
-var errorToEnglish = require("errortoenglish");
+var errorToEnglish = require("errortoenglish-despegar");
 
 module.exports = {
 	

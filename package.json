@@ -2,7 +2,7 @@
   "name": "opticumJS",
   "private": true,
   "version": "0.0.0",
-  "description": "a Sails application",
+  "description": "FrontMonitor: javascript errors logger",
   "dependencies": {
     "sails": "0.9.4",
     "grunt": "0.4.1",
@@ -12,7 +12,7 @@
     "ua-parser-js": "~0.6.2",
     "extend": "~1.2.0",
     "dateformat": "~1.0.6-1.2.3",
-    "errortoenglish": "0.0.6"
+    "errortoenglish-despegar": "0.0.6"
   },
   "scripts": {
     "start": "node app.js",
