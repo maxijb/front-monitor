@@ -1,5 +1,26 @@
 $(document).ready(function() {
 	
+	//login
+	$('.frame-login').find('input').keypress(function(e) {
+		if (e.keyCode == 13) {
+			$(this).closest('form').find('.submit').click();
+		}
+	})
+	.end()
+	.find('.submit').click(function() {
+		$.get('/tryAuth?' + $('form').serialize(), function(d) {
+			if (d == "ok") {
+				var url = window.location.href.replace('login', '');
+				window.location.href = url;
+				// console.log(url);
+			}
+			else {
+				$('.message').html(d);
+			}
+		})
+	})
+
+
 	$('form input').keypress(function(e) {
 		if (e.keyCode == 13) {
 			$('.do_search').click();
@@ -38,6 +59,11 @@ $(document).ready(function() {
 			html += "<a id='" + data[i] + "' class='error'>Error Nº " + data[i] + "</a>";
 		}
 		$('#popup').addClass('loading').fadeIn(300).find('.errors').html(html).find('.error:first').click();
+		debugger;
+		$(document).off('keydown.escape').on('keydown.escape', function(e) {
+			console.log(e.keyCode);
+			if (e.keyCode == 27) $('#popup .close').click();
+		});
 	});
 
 	$('#popup').on('click', '.error', function() {
@@ -71,6 +97,7 @@ $(document).ready(function() {
 
 	$('#popup .close').click(function() {
 		$('#popup').fadeOut(300);
+		$(document).off('keydown.escape');
 	})
 
 

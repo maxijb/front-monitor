@@ -50,6 +50,12 @@ body {
 	background: ;
 }
 
+.logout {
+	float: right;
+	vertical-align: middle;
+	margin: 9px 75px 0 0;
+}
+
 #popup {
 	position: fixed;
 	height: 70%;
@@ -137,4 +143,19 @@ box-shadow:         7px 7px 5px rgba(50, 50, 50, 0.75);
 	padding: 5px 10px;
 	display: none;
 	margin-right: 10px;
+}
+
+.frame-login {
+	width: 80%;
+	margin: 10px auto; 
+}
+
+.frame-login form {
+	border: 1px #666 solid;
+	padding: 20px;
+	float: left;
+}
+.frame-login .message {
+	float: left;
+	margin-left: 20px;
 }

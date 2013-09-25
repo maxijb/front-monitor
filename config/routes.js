@@ -66,7 +66,21 @@ module.exports.routes = {
   '/parseUA' : {
     controller : 'AdminController',
     action : 'parseUA'
+  },
+
+  '/login' : {
+    controller : 'AuthController',
+    action: 'login'
+  },
+  '/tryAuth' : {
+    controller : 'AuthController',
+    action: 'tryAuth'
+  },
+  '/endSession' : {
+    controller : 'AuthController',
+    action: 'endSession'
   }
+
 
   /*
   // But what if you want your home page to display

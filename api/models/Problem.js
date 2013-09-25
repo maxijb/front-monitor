@@ -37,12 +37,14 @@ module.exports = {
   	var now = new Date();
 
   	if (values.stack && !values.file) {
-  		matches = values.stack.match(/(http:.*?):(\d*?):(\d*?)(\s|\))/);
+  		matches = values.stack.match(/(http:.*?):(\d*?):?(\d*?)?(\s|\))/);
   		console.log(matches);
   		if (matches && matches.length > 3) {
   			values.file = matches[1];
-  			values.line = matches[2];
-  			values.char = matches[3];
+        //chorme or || firefox
+  			values.line = matches[2] || matches[3];
+        //chrome
+        if (matches[2]) values.char = matches[3];
   		}
   	}
 
@@ -73,7 +75,7 @@ module.exports = {
 
 function completeCreate(ua, values, next) {
 	if (ua.browser.name == "IE") {
-		console.log(values);
+		// console.log(values);
   		errorToEnglish(values.message, function(err, translation){
   			// console.log(translation);
   			// console.log(err);

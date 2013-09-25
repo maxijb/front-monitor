@@ -24,6 +24,11 @@ module.exports.policies = {
 
   ProblemController : {
   	create : ['addCrossDomainHeader', 'getCommonParams']
+  },
+
+  AdminController : {
+  	'*' : false,
+  	'*' : 'authenticated'
   }
 
   /*
