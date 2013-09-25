@@ -25,9 +25,9 @@ module.exports.adapters = {
   // Learn more: http://en.wikipedia.org/wiki/MySQL
   mysql: {
     module    : 'sails-mysql',
-    host    : 'localhost',
-    user    : 'root',
-    password  : '',
-    database  : 'opticumJS'
+    host    : '10.1.3.10:64220',
+    user    : 'front_app',
+    password  : 'tn0f4859',
+    database  : 'front-monitor'
   }
 };
