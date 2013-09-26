@@ -43,45 +43,45 @@ module.exports.routes = {
     // view: 'home/index'
   },
 
-  '/show' : {
+  '/front-monitor/show' : {
     controller : 'AdminController',
     action : 'show'
   },
 
-  '/error' : {
+  '/front-monitor/error' : {
     controller : 'AdminController',
     action : 'getError'
   },
 
-  '/getGraph' : {
+  '/front-monitor/getGraph' : {
     controller : 'AdminController',
     action : 'getGraph'
   },
 
-  '/getClusters' : {
+  '/front-monitor/getClusters' : {
     controller : 'AdminController',
     action : 'getClusters'
   },
 
 
-  '/problem' : {
+  '/front-monitor/problem' : {
     cors :  true
   },
 
-  '/parseUA' : {
+  '/front-monitor/parseUA' : {
     controller : 'AdminController',
     action : 'parseUA'
   },
 
-  '/login' : {
+  '/front-monitor/login' : {
     controller : 'AuthController',
     action: 'login'
   },
-  '/tryAuth' : {
+  '/front-monitor/tryAuth' : {
     controller : 'AuthController',
     action: 'tryAuth'
   },
-  '/endSession' : {
+  '/front-monitor/endSession' : {
     controller : 'AuthController',
     action: 'endSession'
   }

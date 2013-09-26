@@ -30,7 +30,7 @@ module.exports = {
   endSession : function(req, res) {
   	req.session.authenticated = false;
   	req.session.nickname = "";
-  	res.redirect('/login');
+  	res.redirect('/front-monitor/login');
   }
   
 
