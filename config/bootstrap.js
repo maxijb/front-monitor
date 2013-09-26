@@ -10,8 +10,6 @@
 
 module.exports.bootstrap = function (cb) {
 
-  process.staticContentUrl = "/front-monitor/";
-
   //Genera snapshot de aplicaciones
   Application.find({}, function(err, results) {
   	if (err) console.log(err);

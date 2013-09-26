@@ -22,6 +22,24 @@
  * http://sailsjs.org/#documentation
  */
 
+
+//settings
+  process.staticContentUrl = "/front-monitor/";
+  process.isProd = false;
+  for (var i in process.argv) {
+    console.log(process.argv[i]);
+    if (process.argv[i] == "prod") {
+      process.isProd = true;
+    console.log("prod mode");
+
+    }
+  }
+
+
+
+
+
+
 module.exports = {
 
 
@@ -37,7 +55,7 @@ module.exports = {
   // to 80 (http://) or 443 (https://) if you have an SSL certificate
 
 
-  port: process.argv[2] == "prod" ? 9290 : 1337,
+  port: process.isProd ? 9290 : 1337,
 
 
 
@@ -53,8 +71,7 @@ module.exports = {
   // By default, Sails sets its environment using the `NODE_ENV` environment variable.
   // If NODE_ENV is not set, Sails will run in the 'development' environment.
 
-  environment: process.argv[2] == "prod" ? "production"  : 'development'
+  environment: process.isProd ? "production"  : 'development'
 
 };
 
-console.log(process.env);
