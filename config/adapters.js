@@ -25,11 +25,10 @@ module.exports.adapters = {
   // Learn more: http://en.wikipedia.org/wiki/MySQL
   mysql: {
     module    : 'sails-mysql',
-    // host    : 'mysql-test',
-    // port : 64220,
-    socketPath : '10.1.3.10:64220',
+    host    : 'mysql-test',
+    port : 64220,
     user    : 'front_app',
     password  : 'tn0f4859',
-    database  : 'front-monitor'
+    database  : 'front_monitor'
   }
 };
