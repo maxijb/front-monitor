@@ -8,7 +8,7 @@ $(document).ready(function() {
 	})
 	.end()
 	.find('.submit').click(function() {
-		$.get('/tryAuth?' + $('form').serialize(), function(d) {
+		$.get('/front-monitor/tryAuth?' + $('form').serialize(), function(d) {
 			if (d == "ok") {
 				var url = window.location.href.replace('login', '');
 				window.location.href = url;
@@ -59,7 +59,6 @@ $(document).ready(function() {
 			html += "<a id='" + data[i] + "' class='error'>Error Nº " + data[i] + "</a>";
 		}
 		$('#popup').addClass('loading').fadeIn(300).find('.errors').html(html).find('.error:first').click();
-		debugger;
 		$(document).off('keydown.escape').on('keydown.escape', function(e) {
 			console.log(e.keyCode);
 			if (e.keyCode == 27) $('#popup .close').click();
@@ -70,7 +69,7 @@ $(document).ready(function() {
 		if ($(this).hasClass('active')) return;
 		var errorid = this.id;
 		$(this).addClass('active').siblings().removeClass('active');
-		$.get('/error?id=' + this.id, function(d) {
+		$.get('/front-monitor/error?id=' + this.id, function(d) {
 			if (d.length) {
 				d = d[0];
 				var html = '<h4>Error nº '+errorid+' data</h4>';
@@ -107,7 +106,7 @@ $(document).ready(function() {
 
 function getGraph(filtered) {
 	var params = getParams(filtered);
-	$.get("/admin/getGraph", params, function(d) {
+	$.get("/front-monitor/getGraph", params, function(d) {
 		// $('#graph').html(JSON.stringify(d));
 		var myData = [];
 	var myChart = new JSChart('graph', 'line');
@@ -161,7 +160,7 @@ function getGraph(filtered) {
 function getClusters(filtered) {
 	var params = getParams(filtered);
 	console.log(getParams());
-	$.get("/admin/getClusters", params, function(d) {
+	$.get("/front-monitor/getClusters", params, function(d) {
 		$('#results').html(d);
 	});
 }
