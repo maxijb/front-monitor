@@ -30,8 +30,7 @@
     console.log(process.argv[i]);
     if (process.argv[i] == "prod") {
       process.isProd = true;
-    console.log("prod mode");
-
+      console.log("prod mode");
     }
   }
 
