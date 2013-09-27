@@ -56,6 +56,8 @@ module.exports = {
 		values.major_version = ua.browser.major;
 		values.os = ua.os.name;
 	  	Pageview.create(values, function(err, page) {
+        // console.log(err.ValidationError);
+        // console.log(page);
 	  		if (page) values.pageview = page.id;
 	  		else console.log(err);
   			

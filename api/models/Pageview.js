@@ -10,7 +10,7 @@
 
 module.exports = {
 
-	autoCreatedAt: false,
+	// autoCreatedAt: false,
   	autoUpdatedAt: false,
 
   attributes: {
@@ -30,17 +30,22 @@ module.exports = {
   	browser: 'STRING',
   	major_version: 'STRING',
   	cookies: 'STRING',
-  	os: 'STRING',
-  	created : 'timestamp'
+  	os: 'STRING'
     
-  },
-
-
-
-  beforeCreate: function(values, next) {
-  	// console.log(values);
-	 console.log("URLUUUUUUUUUUUUUUUUUU" + values.url);
-    next();
   }
+  // ,
+
+  // beforeValidate : function(values, next) {
+  //   // console.log("MAIXI");
+  //   // console.log(values);
+  //   next();
+  // },
+
+  // beforeCreate: function(values, next) {
+  // 	// console.log(values);
+
+	 // console.log("URLUUUUUUUUUUUUUUUUUU" + values.url);
+  //   next();
+  // }
 
 };
