@@ -8,6 +8,7 @@
 var UAParser = require('ua-parser-js');
 var parser = new UAParser();
 var errorToEnglish = require("errortoenglish-despegar");
+var dateFormat = require("dateformat");
 
 module.exports = {
 	
@@ -34,9 +35,9 @@ module.exports = {
 
   beforeCreate: function(values, next) {
     values.url = values.baseUrl;
-  	var now = new Date();
-
-  	if (values.stack && !values.file) {
+  	values.created =dateFormat(new Date().getTime(), "yyyy-mm-dd HH:MM:ss");
+  	
+    if (values.stack && !values.file) {
   		matches = values.stack.match(/(http:.*?):(\d*?):?(\d*?)?(\s|\))/);
   		console.log(matches);
   		if (matches && matches.length > 3) {
