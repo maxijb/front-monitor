@@ -28,7 +28,11 @@ module.exports.policies = {
 
   AdminController : {
   	'*' : false,
-  	'*' : 'authenticated'
+  	'*' : ['allowOnlyBackoffice', 'authenticated']
+  },
+
+  AuthController : {
+  	'*' : 'allowOnlyBackoffice'
   }
 
   /*
