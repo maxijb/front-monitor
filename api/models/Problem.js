@@ -25,7 +25,7 @@ module.exports = {
   	char: 'INTEGER',
   	stack: 'STRING',
   	event_type: 'STRING',
-  	event_target: 'STRING',
+  	event_target: 'STRING',   
   	event_selector: 'STRING',
   	timestamp: 'INTEGER',
   	pageview : 'INTEGER',
