@@ -21,7 +21,7 @@ module.exports = {
   	name: 'STRING',
   	message: 'STRING',
   	file: 'STRING',
-  	line: 'INTEGER',
+  	line: 'INTEGER',   
   	char: 'INTEGER',
   	stack: 'STRING',
   	event_type: 'STRING',
