@@ -1,5 +1,5 @@
 echo "Shutting down App.js..."
 {
-	forever stop all
+	forever stopall
 } >> /dev/null
 
