@@ -1,5 +1,4 @@
 #!/bin/bash -x
 #release_number=%RELEASE_NUMBER%
-cd app/
-cp -R ../front-monitor/node-modules/ .
+cp -R front-monitor/node_modules app/
 echo "...done INSTALL"
