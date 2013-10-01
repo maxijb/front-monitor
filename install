@@ -1,4 +1,4 @@
 #!/bin/bash -x
 #release_number=%RELEASE_NUMBER%
-npm install
+cp -R ../front-monitor/node-modules/ .
 echo "...done INSTALL"
