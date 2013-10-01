@@ -1,0 +1,3 @@
+#!/bin/bash -x
+#release_number=%RELEASE_NUMBER%
+echo "...done INSTALL"
