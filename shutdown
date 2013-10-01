@@ -1,5 +1,5 @@
 echo "Shutting down App.js..."
 {
-	forever stopall
+	/home/despegar/.nvm/v0.10.8/bin/forever stopall
 } >> /dev/null
 
