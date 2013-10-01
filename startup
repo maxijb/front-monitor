@@ -3,5 +3,5 @@
 echo -e "Starting App.js ..." 
 {
 	cd app/
-	forever start app.js prod
+	/home/despegar/.nvm/v0.10.8/bin/forever start app.js prod
 } >> /dev/null
