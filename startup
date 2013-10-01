@@ -2,5 +2,5 @@
 
 echo -e "Starting App.js ..." 
 {
-	#forever start app.js prod
+	forever start app.js prod
 } >> /dev/null
