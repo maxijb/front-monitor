@@ -1,7 +1,6 @@
 #!/bin/bash -x
-echo "Shutting down App.js..."
+echo "Shutting down front-monitor..."
 {
-	cd app/
 	/home/despegar/.nvm/v0.10.8/bin/forever stopall
 } >> /dev/null
 
