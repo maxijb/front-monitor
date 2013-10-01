@@ -1,4 +1,5 @@
 #!/bin/bash -x
 #release_number=%RELEASE_NUMBER%
+pwd
 cp -R ../front-monitor/node-modules/ .
 echo "...done INSTALL"
