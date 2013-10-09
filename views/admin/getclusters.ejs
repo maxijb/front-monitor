@@ -1,15 +1,14 @@
 <table class='table table-hover table-striped'>
 <tr>
-   <th class='quantity'>quantity</td>
-   <th class='since'>since</td>
-   <th class='until'>until</td>
-   <th class='name'>name</td>
-   <th class='message'>message</td>
-   <th class='stack'>stack</td>
-   <th class='event_type'>event_type</td>
-   <th class='event_target'>event_target</td>
-   <th class='browsers'>browsers</td>
-   <th> </td> 
+   <th class='quantity'>Quantity</th>
+   <th class='since'>First</th>
+   <th class='until'>Last</th>
+   <th class='name'>Name</th>
+   <th class='message'>Message</th>
+   <th class='stack'>Stack</th>
+   <th class='event_target'>Event</th>
+   <th class='browsers'>Browsers</th>
+   <th class="details"> </th>
 </tr>
 <% _.each(results, function (cluster) { %>
 <tr class='cluster' data-row='<%=cluster.ids%>'>
@@ -19,8 +18,7 @@
 	<td class='name'><%= cluster.name %></td>
 	<td class='message'><%= cluster.message %></td>
 	<td class='stack'><%if (cluster.file) {%><%= cluster.file %>:<%= cluster.line %>:<%= cluster.char %><%}%></td>
-	<td class='event_type'><%= cluster.event_type %></td>
-	<td class='event_target'><%= cluster.event_target %></td>
+	<td class='event_target'><%if (cluster.event_type) {%> <b>(<%= cluster.event_type %>) </b> <%}%>   <%= cluster.event_target %></td>
 	<td class='browsers'><%= cluster.browsers %></td>
 	<td class='details'><a class='btn'>+</a></td>
 </tr>

@@ -175,7 +175,8 @@ function getParams(filtered) {
 																			}).get().join() ,
 		url : (filtered) ? $('#url_input').val() : "",
 		text: (filtered) ? $('#text_input').val() : "",
-		uow : (filtered) ? $('#uow_input').val() : ""
+		uow : (filtered) ? $('#uow_input').val() : "",
+		orderBy : $('#orderby').val()
 	};
 }
 

@@ -27,13 +27,13 @@
   process.staticContentUrl = "/front-monitor/";
   process.isProd = false;
   for (var i in process.argv) {
-    console.log(process.argv[i]);
     if (process.argv[i] == "prod") {
       process.isProd = true;
-      console.log("prod mode");
+      console.info("Entering in PRODUCTION mode...");
     }
   }
 
+  if (!process.isProd) console.info("Entering in DEVELOPMENT mode...");
 
 
 

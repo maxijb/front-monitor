@@ -52,10 +52,16 @@
         <div class='header'>
             <h2>Results</h2>
             <div class='refine'>
+                <span>Order by</span>
+                <select name='orderby' id='orderby'>
+                   <option value="until DESC">Latest ocurrence</option>
+                   <option value="quantity DESC">Most frecuent</option>
+                   <option value="since ASC">First ocurrence</option>
+                </select>
                 <span>Cluster by:</span>
                 <input type='checkbox' checked='checked' class='message'><label>Message</label>
-                <input type='checkbox' checked='checked' class='file'><label>File</label>
-                <input type='checkbox' checked='checked' class='line'><label>Line</label>
+                <input type='checkbox' class='file'><label>File</label>
+                <input type='checkbox' class='line'><label>Line</label>
                 <input type='checkbox' class='name'><label>Name</label>
                 <input type='checkbox' class='name'><label>Browser</label>
                 <input type='checkbox' class='name'><label>OS</label>

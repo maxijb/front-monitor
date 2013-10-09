@@ -133,7 +133,7 @@ module.exports = {
 		console.log("Buscando errores despues de " + limitBack);
 		console.log(params);
 		console.log("SELECT a.*, b.*, GROUP_CONCAT(a.id) as ids, COUNT(*) as quantity, DATE_FORMAT(MIN(a.created), ?) as since, DATE_FORMAT(MAX(a.created), ?) as until, GROUP_CONCAT(DISTINCT browser) as browsers FROM problem a LEFT JOIN pageview b ON (a.pageview = b.id) WHERE application = ? AND a.created >= ? AND a.created <= ? " + queryUow + queryText + queryUrl + "GROUP BY "+params.groupBy+" ORDER BY ?");
-		var q = Problem.query("SELECT a.*, b.*, GROUP_CONCAT(a.id) as ids, COUNT(*) as quantity, DATE_FORMAT(MIN(a.created), ?) as since, DATE_FORMAT(MAX(a.created), ?) as until, GROUP_CONCAT(DISTINCT browser) as browsers FROM problem a LEFT JOIN pageview b ON (a.pageview = b.id) WHERE application = ? AND a.created >= ? AND a.created <= ? " + queryUow + queryText + queryUrl + "GROUP BY "+params.groupBy+" ORDER BY until DESC", 
+		var q = Problem.query("SELECT a.*, b.*, GROUP_CONCAT(a.id) as ids, COUNT(*) as quantity, DATE_FORMAT(MIN(a.created), ?) as since, DATE_FORMAT(MAX(a.created), ?) as until, GROUP_CONCAT(DISTINCT browser) as browsers FROM problem a LEFT JOIN pageview b ON (a.pageview = b.id) WHERE application = ? AND a.created >= ? AND a.created <= ? " + queryUow + queryText + queryUrl + "GROUP BY "+params.groupBy+" ORDER BY " + params.orderBy, 
 						[tf.groupTimeFormatCluster, tf.groupTimeFormatCluster, params.application, limitBack, nowFormat, params.orberBy], 
 						function(err, results) {
 							if (err) { console.log(err); res.send(500); }

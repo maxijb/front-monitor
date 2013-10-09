@@ -7,6 +7,9 @@
  * For more information on bootstrapping your app, check out:
  * http://sailsjs.org/#documentation
  */
+// var helper = require('/services/heleper');
+
+
 
 module.exports.bootstrap = function (cb) {
 
@@ -19,9 +22,14 @@ module.exports.bootstrap = function (cb) {
   		for (var i in results) {
   			process.data.applications[results[i].id] = results[i];
   		}
-  		console.log(process.data.applications);
+  		// console.log(process.data.applications);
   	}
   })
+
+  //tira y genera el interval para borrar logs viejos una vez por dia
+  jobs.deleteOldRecords();
+  setInterval(jobs.deleteOldRecords, (60*60*24*1000));
+  console.info("Job for removing old logs set!");
 
   // It's very important to trigger this callack method when you are finished 
   // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
