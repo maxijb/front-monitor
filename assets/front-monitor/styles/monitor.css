@@ -171,8 +171,22 @@ box-shadow:         7px 7px 5px rgba(50, 50, 50, 0.75);
 }
 
 
+table .event_target, table .browsers {
+	width: 100px;
+}
+
+table .stack, table .message {
+	width: 30%;
+}
+
 table .details {
 	width: 35px;
 	padding-left:0; 
 	padding-right:0; 
 }
+
+table { 
+	table-layout: fixed; 
+	word-wrap: break-word;
+}
+table th, table td { overflow: hidden; }
