@@ -34,6 +34,7 @@ module.exports = {
   },
 
   beforeCreate: function(values, next) {
+    
     values.url = values.baseUrl;
   	values.created =dateFormat(new Date().getTime(), "yyyy-mm-dd HH:MM:ss");
   	
@@ -55,12 +56,15 @@ module.exports = {
 		values.browser = ua.browser.name;
 		values.major_version = ua.browser.major;
 		values.os = ua.os.name;
-	  	Pageview.create(values, function(err, page) {
+    
+      values.forceTableName = "pageview" + values.application;
+      Pageview.create(values, function(err, page) {
         // console.log(err.ValidationError);
         // console.log(page);
-	  		if (page) values.pageview = page.id;
-	  		else console.log(err);
-  			
+        if (page) values.pageview = page.id;
+        else console.log(err);
+        
+      values.forceTableName = "problem" + values.application;
   			completeCreate(ua, values, next);
 	  	});
   	} else {

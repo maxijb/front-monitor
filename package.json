@@ -13,7 +13,8 @@
     "extend": "~1.2.0",
     "dateformat": "~1.0.6-1.2.3",
     "errortoenglish-despegar": "0.0.6",
-    "sails-mysql": "0.9"
+    "sails-mysql": "0.9",
+    "source-map": "~0.1.30"
   },
   "scripts": {
     "start": "node app.js",
