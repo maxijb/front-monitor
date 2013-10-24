@@ -96,14 +96,14 @@ module.exports = {
 		  return cb({"error" : "Null aplication"}, null);
 	  }
 	  
-	  module.exports.beforeCreate(params, function() {
-			  var pageview = extend({table : "pageview" + params.application}, Pageview.getDefaultObject(), params); 
+	  module.exports.beforeCreate(params, function(data) {
+			  var pageview = extend({table : "pageview" + data.application}, Pageview.getDefaultObject(), data); 
 			  connection.query("INSERT INTO " + pageview.table + " SET url = :url, uow = :uow, custom_parameter = :custom_parameter, user_agent = :user_agent, browser = :browser, major_version = :major_version, cookies = :cookies, os = :os, createdAt = :createdAt", pageview, function(err, res) {
 				  if (err) {
 					  cb(err, null); 
 				  }
 				  else {
-					  var problem = extend(defaultObject, {table : "problem" + params.application, pageview : res.insertId}, params);
+					  var problem = extend(defaultObject, {table : "problem" + data.application, pageview : res.insertId}, data);
 					  connection.query("INSERT INTO " + problem.table + " SET name = :name, message = :message, file = :file, line = :line, `char` = :char, stack = :stack, event_type = :event_type, event_target = :event_target, event_selector = :event_selector, timestamp = :timestamp, pageview = :pageview, created = :created", problem, function(error, resp) {
 						  if (error) {
 							  cb(error, null); 
@@ -148,10 +148,10 @@ function completeCreate(ua, values, next) {
   			// console.log(translation);
   			// console.log(err);
   			if (translation) values.message = translation;
-			 next();
+			 next(values);
 			});
   	}
   	else {
-  		next();
+  		next(values);
   	}
 }
