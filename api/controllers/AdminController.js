@@ -108,10 +108,6 @@ module.exports = {
 		}
 		res.header("Content-Type", "text/html; charset=utf-8");
 		res.view(view);
-		// var params = defaultParams.extend(req.query);
-		// this.title = "maxi";
-
-		
 	},
 
 	getClusters : function(req, res) {
@@ -131,10 +127,10 @@ module.exports = {
 		var queryUow = params.uow ? " AND b.uow LIKE '%" + params.uow + "%' " : '';
 
 		console.log("Buscando errores despues de " + limitBack);
-		console.log(params);
-		console.log("SELECT a.*, b.*, GROUP_CONCAT(a.id) as ids, COUNT(*) as quantity, DATE_FORMAT(MIN(a.created), ?) as since, DATE_FORMAT(MAX(a.created), ?) as until, GROUP_CONCAT(DISTINCT browser) as browsers FROM problem a LEFT JOIN pageview b ON (a.pageview = b.id) WHERE application = ? AND a.created >= ? AND a.created <= ? " + queryUow + queryText + queryUrl + "GROUP BY "+params.groupBy+" ORDER BY ?");
-		var q = Problem.query("SELECT a.*, b.*, GROUP_CONCAT(a.id) as ids, COUNT(*) as quantity, DATE_FORMAT(MIN(a.created), ?) as since, DATE_FORMAT(MAX(a.created), ?) as until, GROUP_CONCAT(DISTINCT browser) as browsers FROM problem a LEFT JOIN pageview b ON (a.pageview = b.id) WHERE application = ? AND a.created >= ? AND a.created <= ? " + queryUow + queryText + queryUrl + "GROUP BY "+params.groupBy+" ORDER BY " + params.orderBy, 
-						[tf.groupTimeFormatCluster, tf.groupTimeFormatCluster, params.application, limitBack, nowFormat, params.orberBy], 
+//		console.log(params);
+//		console.log("SELECT a.*, b.*, GROUP_CONCAT(a.id) as ids, COUNT(*) as quantity, DATE_FORMAT(MIN(a.created), ?) as since, DATE_FORMAT(MAX(a.created), ?) as until, GROUP_CONCAT(DISTINCT browser) as browsers FROM problem a LEFT JOIN pageview b ON (a.pageview = b.id) WHERE application = ? AND a.created >= ? AND a.created <= ? " + queryUow + queryText + queryUrl + "GROUP BY "+params.groupBy+" ORDER BY ?");
+		var q = Problem.query("SELECT a.*, b.*, GROUP_CONCAT(a.id) as ids, COUNT(*) as quantity, DATE_FORMAT(MIN(a.created), ?) as since, DATE_FORMAT(MAX(a.created), ?) as until, GROUP_CONCAT(DISTINCT browser) as browsers FROM problem" + params.application +" a LEFT JOIN pageview" + params.application +" b ON (a.pageview = b.id) WHERE a.created >= ? AND a.created <= ? " + queryUow + queryText + queryUrl + "GROUP BY "+params.groupBy+" ORDER BY " + params.orderBy, 
+						[tf.groupTimeFormatCluster, tf.groupTimeFormatCluster, limitBack, nowFormat], 
 						function(err, results) {
 							if (err) { console.log(err); res.send(500); }
 							if (params.format == 'json') res.json(results);
@@ -167,12 +163,13 @@ module.exports = {
 				index: Math.floor(units / labelsCount * i)
 			});
 		}
-		console.log(labels);
+//		console.log(labels);
 
 
 		console.log("Buscando errores despues de " + limitBack);
-		Problem.query("SELECT COUNT(*) as quantity, DATE_FORMAT(a.created, ?) as stamp, DATE_FORMAT(DATE_ADD(a.created, INTERVAL " + tf.groupTimeDescripticion + "), ?) as stampTo, FLOOR(TIME_TO_SEC(TIMEDIFF(a.created, ?)) / "+tf.groupTime+") as position  FROM problem a LEFT JOIN pageview b ON (a.pageview = b.id) WHERE application = ? AND a.created >= ? AND a.created <= ? " + queryUow + queryText + queryUrl + "GROUP BY stamp, position ORDER BY stamp ASC", 
-			[tf.groupTimeFormat, tf.groupTimeFormat,  limitBack, params.application, limitBack, nowFormat], 
+//		console.log("SELECT COUNT(*) as quantity, DATE_FORMAT(a.created, ?) as stamp, DATE_FORMAT(DATE_ADD(a.created, INTERVAL " + tf.groupTimeDescripticion + "), ?) as stampTo, FLOOR(TIME_TO_SEC(TIMEDIFF(a.created, ?)) / "+tf.groupTime+") as position  FROM problem" + params.application + " a LEFT JOIN pageview"+ params.application +" b ON (a.pageview = b.id) WHERE a.created >= ? AND a.created <= ? " + queryUow + queryText + queryUrl + "GROUP BY stamp, position ORDER BY stamp ASC"); 
+		Problem.query("SELECT COUNT(*) as quantity, DATE_FORMAT(a.created, ?) as stamp, DATE_FORMAT(DATE_ADD(a.created, INTERVAL " + tf.groupTimeDescripticion + "), ?) as stampTo, FLOOR(TIME_TO_SEC(TIMEDIFF(a.created, ?)) / "+tf.groupTime+") as position  FROM problem" + params.application + " a LEFT JOIN pageview"+ params.application +" b ON (a.pageview = b.id) WHERE a.created >= ? AND a.created <= ? " + queryUow + queryText + queryUrl + "GROUP BY stamp, position ORDER BY stamp ASC", 
+			[tf.groupTimeFormat, tf.groupTimeFormat,  limitBack, limitBack, nowFormat], 
 			function(err, results) {
 				if (err) { console.log(err); res.send(500); }
 				var data = {};
@@ -186,7 +183,7 @@ module.exports = {
 
 	getError : function(req, res) {
 		if (req.query.id) {
-			Problem.query("SELECT a.*, b.* FROM problem a LEFT JOIN pageview b ON (a.pageview = b.id) WHERE a.id = "+req.query.id, function(err, results) {
+			Problem.query("SELECT a.*, b.* FROM problem" + req.query.application + " a LEFT JOIN pageview" + req.query.application + " b ON (a.pageview = b.id) WHERE a.id = "+req.query.id, function(err, results) {
 				if (err) { 
 					console.log(err);
 					res.json({});
@@ -203,7 +200,7 @@ module.exports = {
 
 	parseUA : function(req, res) {
 		if (req.query.id) {
-			Problem.query("SELECT b.user_agent FROM problem a LEFT JOIN pageview b ON (a.pageview = b.id) WHERE a.id = "+req.query.id, function(err, results) {
+			Problem.query("SELECT b.user_agent FROM problem" + req.query.application + " a LEFT JOIN pageview" + req.query.application + " b ON (a.pageview = b.id) WHERE a.id = "+req.query.id, function(err, results) {
 				if (err) {
 					console.log(err);
 					res.json({});

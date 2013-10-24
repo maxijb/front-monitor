@@ -10,8 +10,8 @@
 
 module.exports = {
 
-	// autoCreatedAt: false,
-  	autoUpdatedAt: false,
+		autoCreatedAt: false,
+	  	autoUpdatedAt: false,
 
   attributes: {
   	
@@ -30,22 +30,24 @@ module.exports = {
   	browser: 'STRING',
   	major_version: 'STRING',
   	cookies: 'STRING',
-  	os: 'STRING'
+  	os: 'STRING',
+  	createdAt : 'timestamp'
     
-  }
-  // ,
-
-  // beforeValidate : function(values, next) {
-  //   // console.log("MAIXI");
-  //   // console.log(values);
-  //   next();
-  // },
-
-  // beforeCreate: function(values, next) {
-  // 	// console.log(values);
-
-	 // console.log("URLUUUUUUUUUUUUUUUUUU" + values.url);
-  //   next();
-  // }
+  },
+  
+  getDefaultObject: function() { return defaultObject}
 
 };
+
+
+//create default objects to be extended later
+var defaultObject = createDefaultObject();
+function createDefaultObject() {
+	var obj = {};
+	  for (var i in module.exports.attributes) {
+		  if (i != 'id') {
+			  obj[i] = (module.exports.attributes[i].type == "integer") ? 0 : '';
+		  }
+	  }
+	  return obj;
+}

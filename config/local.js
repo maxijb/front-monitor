@@ -31,6 +31,10 @@
       process.isProd = true;
       console.info("Entering in PRODUCTION mode...");
     }
+    if (process.argv[i] == "updateModels") {
+        process.updateModels = true;
+        console.info("We will update the models in the BD. This can take a little while...");
+     }
   }
 
   if (!process.isProd) console.info("Entering in DEVELOPMENT mode...");

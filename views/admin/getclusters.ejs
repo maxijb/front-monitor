@@ -11,7 +11,7 @@
    <th class="details"> </th>
 </tr>
 <% _.each(results, function (cluster) { %>
-<tr class='cluster' data-row='<%=cluster.ids%>'>
+<tr class='cluster' data-row='<%=cluster.ids%>' data-application='<%=cluster.application%>'>
 	<td class='quantity'><%= cluster.quantity %></td>
 	<td class='since'><%= cluster.since %></td>
 	<td class='until'><%= cluster.until %></td>
