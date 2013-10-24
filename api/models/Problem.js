@@ -91,7 +91,6 @@ module.exports = {
    * @param cb
    */
   create : function(params, cb) {
-	  console.log(params);
 	  if (!params.application && !params.pageview) {
 		  console.log("Null application");
 		  return cb({"error" : "Null aplication"}, null);
