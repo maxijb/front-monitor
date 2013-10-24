@@ -29,7 +29,7 @@ connection.config.queryFormat = function (query, values) {
 	    }
 	    return txt;
 	  }.bind(this));
-//	  console.log(finalQuery);
+	  console.log(finalQuery);
 	  return finalQuery;
 	};
 	
@@ -91,28 +91,28 @@ module.exports = {
    * @param cb
    */
   create : function(params, cb) {
-	  if (!params.application) {
+	  console.log(params);
+	  if (!params.application && !params.pageview) {
 		  console.log("Null application");
 		  return cb({"error" : "Null aplication"}, null);
 	  }
 	  
 	  module.exports.beforeCreate(params, function(data) {
-			  var pageview = extend({table : "pageview" + data.application}, Pageview.getDefaultObject(), data); 
+			if (!data.pageview) {
+				
+		  	  var pageview = extend({table : "pageview" + data.application}, Pageview.getDefaultObject(), data); 
 			  connection.query("INSERT INTO " + pageview.table + " SET url = :url, uow = :uow, custom_parameter = :custom_parameter, user_agent = :user_agent, browser = :browser, major_version = :major_version, cookies = :cookies, os = :os, createdAt = :createdAt", pageview, function(err, res) {
 				  if (err) {
 					  cb(err, null); 
 				  }
 				  else {
-					  var problem = extend(defaultObject, {table : "problem" + data.application, pageview : res.insertId}, data);
-					  connection.query("INSERT INTO " + problem.table + " SET name = :name, message = :message, file = :file, line = :line, `char` = :char, stack = :stack, event_type = :event_type, event_target = :event_target, event_selector = :event_selector, timestamp = :timestamp, pageview = :pageview, created = :created", problem, function(error, resp) {
-						  if (error) {
-							  cb(error, null); 
-						  }
-						  else 
-							  cb(null, {pageview : problem.pageview, id: resp.insertId});
-					  }); 
+					  data.pageview = res.insertId;
+					  saveProblem(data, cb);
 				  }
 			  });
+			} else {
+					saveProblem(data, cb);
+			}
 	  });
   }
   
@@ -124,6 +124,23 @@ module.exports = {
 
 
 };
+
+/**
+ * Guarda el prblema y llama al cb
+ * @param data
+ * @param cb
+ */
+function saveProblem(data, cb) {
+	var problem = extend(defaultObject, {table : "problem" + data.application}, data);
+	  connection.query("INSERT INTO " + problem.table + " SET name = :name, message = :message, file = :file, line = :line, `char` = :char, stack = :stack, event_type = :event_type, event_target = :event_target, event_selector = :event_selector, timestamp = :timestamp, pageview = :pageview, created = :created", problem, function(error, resp) {
+		  if (error) {
+			  cb(error, null); 
+		  }
+		  else 
+			  cb(null, {pageview : problem.pageview, id: resp.insertId});
+	  }); 
+}
+
 
 //create default objects to be extended later
 var defaultObject = createDefaultObject();
