@@ -69,7 +69,8 @@ $(document).ready(function() {
 		if ($(this).hasClass('active')) return;
 		var errorid = this.id;
 		$(this).addClass('active').siblings().removeClass('active');
-		$.get('/front-monitor/error?id=' + this.id, function(d) {
+		var app = $('#applications a:first').data('id');
+		$.get('/front-monitor/error', {id : this.id, application : app }, function(d) {
 			if (d.length) {
 				d = d[0];
 				var html = '<h4>Error nº '+errorid+' data</h4>';
@@ -89,7 +90,8 @@ $(document).ready(function() {
 	}).on('click', '.parse', function() {
 		var id = $("#popup .error.active").attr('id');
 		var $this = $(this);
-		$.get("/parseUA?id=" + id, function(d) {
+		var app = $('#applications a:first').data('id');
+		$.get("/front-monitor/parseUA", {id : id, application : app }, function(d) {
 			$this.closest('p').after("<p class='user_agent'>" + JSON.stringify(d) + "</p>").next().slideDown(500);
 		})
 	});

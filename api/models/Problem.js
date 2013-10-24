@@ -9,6 +9,31 @@ var UAParser = require('ua-parser-js');
 var parser = new UAParser();
 var errorToEnglish = require("errortoenglish-despegar");
 var dateFormat = require("dateformat");
+var extend = require("extend");
+
+var mysql  = require('mysql');
+
+var connection = mysql.createConnection({
+	host    : 'mysql-test',
+    port : 64220,
+    user    : 'front_app',
+    password  : 'tn0f4859',
+    database  : 'front_monitor'
+});
+
+connection.config.queryFormat = function (query, values) {
+	  if (!values) return query;
+	  var finalQuery = query.replace(/\:(\w+)/g, function (txt, key) {
+	    if (values.hasOwnProperty(key)) {
+	      return this.escape(values[key]);
+	    }
+	    return txt;
+	  }.bind(this));
+	  console.log(finalQuery);
+	  return finalQuery;
+	};
+	
+
 
 module.exports = {
 	
@@ -34,9 +59,8 @@ module.exports = {
   },
 
   beforeCreate: function(values, next) {
-    
     values.url = values.baseUrl;
-  	values.created =dateFormat(new Date().getTime(), "yyyy-mm-dd HH:MM:ss");
+  	values.created = values.createdAt = dateFormat(new Date().getTime(), "yyyy-mm-dd HH:MM:ss");
   	
     if (values.stack && !values.file) {
   		matches = values.stack.match(/(http:.*?):(\d*?):?(\d*?)?(\s|\))/);
@@ -56,28 +80,60 @@ module.exports = {
 		values.browser = ua.browser.name;
 		values.major_version = ua.browser.major;
 		values.os = ua.os.name;
-    
-      values.forceTableName = "pageview" + values.application;
-      Pageview.create(values, function(err, page) {
-        // console.log(err.ValidationError);
-        // console.log(page);
-        if (page) values.pageview = page.id;
-        else console.log(err);
-        
-      values.forceTableName = "problem" + values.application;
-  			completeCreate(ua, values, next);
-	  	});
-  	} else {
-  		completeCreate(ua, values, next);
   	}
 
-
-  	
-
-
+  	completeCreate(ua, values, next);
   }
+  ,
+  /**
+   * Ovverride create method
+   * @param params
+   * @param cb
+   */
+  create : function(params, cb) {
+	  module.exports.beforeCreate(params, function() {
+			  var pageview = extend({table : "pageview" + params.application}, Pageview.getDefaultObject(), params); 
+			  connection.query("INSERT INTO " + pageview.table + " SET url = :url, uow = :uow, custom_parameter = :custom_parameter, user_agent = :user_agent, browser = :browser, major_version = :major_version, cookies = :cookies, os = :os, createdAt = :createdAt", pageview, function(err, res) {
+				  if (err) {
+					  cb(err, null); 
+				  }
+				  else {
+					  var problem = extend(defaultObject, {table : "problem" + params.application, pageview : res.insertId}, params);
+					  connection.query("INSERT INTO " + problem.table + " SET name = :name, message = :message, file = :file, line = :line, `char` = :char, stack = :stack, event_type = :event_type, event_target = :event_target, event_selector = :event_selector, timestamp = :timestamp, pageview = :pageview, created = :created", problem, function(error, resp) {
+						  if (error) {
+							  cb(error, null); 
+						  }
+						  else 
+							  cb(null, {pageview : problem.pageview, id: resp.insertId});
+					  }); 
+				  }
+			  });
+	  });
+  }
+  
+ /**
+  * Devuelve un objeto vacio dle modelo
+  */
+  ,getDefaultObject: function() { return defaultObject}
+	  
+
 
 };
+
+//create default objects to be extended later
+var defaultObject = createDefaultObject();
+function createDefaultObject() {
+	var obj = {};
+	  for (var i in module.exports.attributes) {
+		  if (i != 'id') {
+			  obj[i] = (module.exports.attributes[i].type == "integer") ? 0 : '';
+		  }
+	  }
+	  return obj;
+}
+
+
+
 
 
 function completeCreate(ua, values, next) {

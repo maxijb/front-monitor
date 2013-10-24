@@ -7,12 +7,9 @@
  * For more information on bootstrapping your app, check out:
  * http://sailsjs.org/#documentation
  */
-// var helper = require('/services/heleper');
-
-
 
 module.exports.bootstrap = function (cb) {
-
+  console.log("Getting applications");
   //Genera snapshot de aplicaciones
   Application.find({}, function(err, results) {
   	if (err) console.log(err);
@@ -22,17 +19,22 @@ module.exports.bootstrap = function (cb) {
   		for (var i in results) {
   			process.data.applications[results[i].id] = results[i];
   		}
-      jobs.checkForCreatedTables(process.data.applications, function() {
-          //tira y genera el interval para borrar logs viejos una vez por dia
-          jobs.deleteOldRecords();
-          setInterval(jobs.deleteOldRecords, (60*60*24*1000));
-          console.info("Job for removing old logs set!");
-          // It's very important to trigger this callack method when you are finished 
-          // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
-          cb();
-      });
+      if (process.isProd) {
+        jobs.checkForCreatedTables(process.data.applications, function() {
+            //tira y genera el interval para borrar logs viejos una vez por dia
+              jobs.deleteOldRecords(process.data.applications, cb);
+              setInterval(function() {
+            	  				jobs.deleteOldRecords(process.data.applications);
+              				}, (60*60*24*1000));
+              console.info("Job for removing old logs will be executed in 24 hs again.");
+        });
+      } else {
+    	  // It's very important to trigger this callack method when you are finished 
+    	  // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
+    	  cb();
+      } 
     }
-  })
+  });
 
 
 };
