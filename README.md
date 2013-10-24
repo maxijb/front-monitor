@@ -1,2 +1,2 @@
-# opticumJS
-### a Sails application
+# FrontMonitor
+# Javascript errors logger 
