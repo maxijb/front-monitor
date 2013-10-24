@@ -29,7 +29,7 @@ connection.config.queryFormat = function (query, values) {
 	    }
 	    return txt;
 	  }.bind(this));
-	  console.log(finalQuery);
+//	  console.log(finalQuery);
 	  return finalQuery;
 	};
 	
@@ -91,6 +91,11 @@ module.exports = {
    * @param cb
    */
   create : function(params, cb) {
+	  if (!params.application) {
+		  console.log("Null application");
+		  return cb({"error" : "Null aplication"}, null);
+	  }
+	  
 	  module.exports.beforeCreate(params, function() {
 			  var pageview = extend({table : "pageview" + params.application}, Pageview.getDefaultObject(), params); 
 			  connection.query("INSERT INTO " + pageview.table + " SET url = :url, uow = :uow, custom_parameter = :custom_parameter, user_agent = :user_agent, browser = :browser, major_version = :major_version, cookies = :cookies, os = :os, createdAt = :createdAt", pageview, function(err, res) {
