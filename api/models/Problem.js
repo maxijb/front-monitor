@@ -91,7 +91,7 @@ module.exports = {
    * @param cb
    */
   create : function(params, cb) {
-	  if (!params.application && !params.pageview) {
+	  if (!params.application) {
 		  console.log("Null application");
 		  return cb({"error" : "Null aplication"}, null);
 	  }
@@ -130,7 +130,7 @@ module.exports = {
  * @param cb
  */
 function saveProblem(data, cb) {
-	var problem = extend(defaultObject, {table : "problem" + data.application}, data);
+	var problem = extend({table : "problem" + data.application}, defaultObject, data);
 	  connection.query("INSERT INTO " + problem.table + " SET name = :name, message = :message, file = :file, line = :line, `char` = :char, stack = :stack, event_type = :event_type, event_target = :event_target, event_selector = :event_selector, timestamp = :timestamp, pageview = :pageview, created = :created", problem, function(error, resp) {
 		  if (error) {
 			  cb(error, null); 
