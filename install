@@ -1,4 +1,12 @@
 #!/bin/bash -x
 #release_number=%RELEASE_NUMBER%
+
+echo "...checking dependencies"
+if ! diff -b -B -q front-monitor/package.json app/package.json > /dev/null ; then
+  echo "downloading new dependencies"
+  cp app/package.json front-monitor/
+  npm install 
+fi
+
 cp -R front-monitor/node_modules app/
 echo "...done INSTALL"
