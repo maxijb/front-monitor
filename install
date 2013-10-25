@@ -9,4 +9,11 @@ if ! diff -b -B -q front-monitor/package.json app/package.json > /dev/null ; the
 fi
 
 cp -R front-monitor/node_modules app/
+
+echo "...prepare cron for log rotate"
+chmod +x /home/despegar/app/scripts/logrotate.sh
+echo "*/1 * * * * /home/despegar/app/scripts/logrotate.sh" >> mycron
+crontab mycron
+rm mycron
+
 echo "...done INSTALL"

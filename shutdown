@@ -2,5 +2,6 @@
 echo "Shutting down front-monitor..."
 {
 	/home/despegar/.nvm/v0.10.8/bin/forever stopall
+	crontab -r
 } >> /dev/null
 
