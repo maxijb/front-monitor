@@ -12,7 +12,7 @@ cp -R front-monitor/node_modules app/
 
 echo "...prepare cron for log rotate"
 chmod +x /home/despegar/app/scripts/logrotate.sh
-echo "*/1 * * * * /home/despegar/app/scripts/logrotate.sh" >> mycron
+echo "0 0 * * * /home/despegar/app/scripts/logrotate.sh" >> mycron
 crontab mycron
 rm mycron
 
