@@ -101,7 +101,6 @@ var baseQueries = {
 	  `pageview` int(11) DEFAULT NULL, \
 	  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, \
 	  PRIMARY KEY (`id`), \
-	  KEY `pageview` (`pageview`), \
 	  KEY `file` (`file`,`line`), \
 	  KEY `file_2` (`file`,`line`,`message`), \
 	  KEY `name` (`name`), \
