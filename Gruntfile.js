@@ -237,6 +237,10 @@ module.exports = function (grunt) {
       dist: {
         src: ['.tmp/public/concat/production.js'],
         dest: '.tmp/public/min/production.js'
+      },
+      collector: {
+    	  src: ['collector/front-monitor-collector.js'],
+          dest: 'collector/front-monitor-collector.min.js' 
       }
     },
 
@@ -478,4 +482,10 @@ module.exports = function (grunt) {
   //     console.error(filepath + ' has ' + action + ', but could not signal the Sails.js server: ' + e.message);
   //   });
   // });
+  
+  
+  grunt.registerTask('buildClient', [
+      'uglify:collector'
+  ]);                                  
+  
 };
