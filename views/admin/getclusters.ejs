@@ -17,8 +17,8 @@
 	<td class='until'><%= cluster.until %></td>
 	<td class='name'><%= cluster.name %></td>
 	<td class='message'><%= cluster.message %></td>
-	<td class='stack'><%if (cluster.file) {%><%= cluster.file %>:<%= cluster.line %>:<%= cluster.char %><%}%></td>
-	<td class='event_target'><%if (cluster.event_type) {%> <b>(<%= cluster.event_type %>) </b> <%}%>   <%= cluster.event_target %></td>
+	<td class='stack'><%if (cluster.file) {%><%= cluster.file %>:<%= cluster.line %>:<%= cluster.char %><%} else {%> <%= cluster.stack %><%}%> </td>
+	<td class='event_target'><%if (cluster.event_type && cluster.event_type != 'null') {%> <b>(<%= cluster.event_type %>) </b> <%}%>   <%= cluster.event_target %></td>
 	<td class='browsers'><%= cluster.browsers %></td>
 	<td class='details'><a class='btn'>+</a></td>
 </tr>
