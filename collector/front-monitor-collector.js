@@ -1,5 +1,5 @@
 window.FrontMonitor = (function() {
-
+	var FrontMonitorVersion = "{FRONT_MONITOR_VERSION}";
 	/////////////////CHECK IF OPTIONS RERQIRED SET
 	if (!window.FrontMonitorOptions || !FrontMonitorOptions.application || !FrontMonitorOptions.baseServiceUrl) 
 		return;
@@ -19,8 +19,7 @@ window.FrontMonitor = (function() {
 		var isBound = false;
 		var readyList = [];
 
-		if (window[onDomReadyIdentifier]
-				&& typeof window[onDomReadyIdentifier] == 'function') {
+		if (window[onDomReadyIdentifier] && typeof window[onDomReadyIdentifier] == 'function') {
 			return;
 		}
 
@@ -134,7 +133,8 @@ window.FrontMonitor = (function() {
 		application : defaults.application,
 		uow : defaults.uow || null,
 		custom_parameter : defaults.custom_parameter || null,
-		ready : false
+		ready : false,
+		version : FrontMonitorVersion
 	};
 	var trackedErrors = [];
 	setWindowOnError();
@@ -161,8 +161,7 @@ window.FrontMonitor = (function() {
 		}
 
 		// override jquery.fn.on
-		Config.jQuery_fn_on_original = Config.jQuery_fn_on_original
-				|| jQuery.fn.on;
+		Config.jQuery_fn_on_original = Config.jQuery_fn_on_original || jQuery.fn.on;
 		jQuery.fn.on = function() {
 			var args = Array.prototype.slice.call(arguments), fnArgIdx = 4;
 
@@ -230,11 +229,7 @@ window.FrontMonitor = (function() {
 	
 	// capture and handle different kinds of exceptions
 	function captureException(args, error, basicTracking) {
-		lastEx = {
-			args : args,
-			error : error,
-			basicTracking : basicTracking
-		};
+		var thisError;
 		if (basicTracking) {
 			var message = args[0]
 			thisError = {
@@ -289,6 +284,7 @@ window.FrontMonitor = (function() {
 				thisError.custom_parameter = Config.custom_parameter;
 			}
 		}
+		thisError.version = Config.version;
 		trackedErrors.push(thisError);
 		trackAndResetErrors();
 	}
@@ -357,16 +353,56 @@ window.FrontMonitor = (function() {
 			}
 	}
 	
+	/**
+	 * Loguea un error custom autogenerado
+	 */
+	function logXHRError(options) {
+		
+	
+		var _options = {
+		   "name" : "AJAX Error",
+		   "message" : "",
+		   "stack" : "",
+		   "xhr" : {},
+		   "textStatus" : ""
+		};
+		
+		$.extend(_options, options);
+		
+
+		try {
+			
+			var errorRetrieved = eval("(" + _options.xhr.responseText + ")");
+			_options.message = _options.message + " Problem: " +errorRetrieved.error;
+		
+		}
+		catch (e){
+			
+			_options.message = _options.message + " Problem: " + _options.textStatus;
+		}
+
+		logError(_options);
+	}
 	
 	/**
 	 * Loguea un error custom autogenerado
 	 */
 	function logError(message, stack) {
-		captureException(null, {
+		if (typeof message === "string") {		
+			captureException(null, {
 								name: "Custom Error",
 								message: message,
 								stack: stack
 								});
+		} else {
+			var _options = {
+		   			"name" : "Custom Error",
+				   "message" : "",
+				   "stack" : ""
+					};
+			$.extend(_options, message);
+			captureException(null, _options);
+		}
 	}
 	
 	/**
@@ -381,7 +417,8 @@ window.FrontMonitor = (function() {
 		captureException : captureException,
 		setCustomParameter : setCustomParameter,
 		logError : logError,
-		getConfig : getConfig
-	}
+		getConfig : getConfig,
+		logXHRError : logXHRError
+	};
 
 })();
