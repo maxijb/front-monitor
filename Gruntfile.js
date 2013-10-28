@@ -484,7 +484,7 @@ module.exports = function (grunt) {
   // });
   
   
-  grunt.registerTask('build-client', [
+  grunt.registerTask('buildClient', [
       'uglify:collector'
   ]);                                  
   
