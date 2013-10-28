@@ -1,5 +1,4 @@
 #!/bin/bash -x
-#release_number=%RELEASE_NUMBER%
 
 echo "...checking dependencies"
 if ! diff -b -B -q front-monitor/package.json app/package.json > /dev/null ; then
@@ -8,11 +7,11 @@ if ! diff -b -B -q front-monitor/package.json app/package.json > /dev/null ; the
   	npm install 
 fi
 
-if ! diff -b -B -q ../app.bak/collector/collector-version collector/collector-version > /dev/null ; then
+if ! diff -b -B -q /home/despegar/app.bak/collector/collector-version /home/despegar/app/collector/collector-version > /dev/null ; then
 	echo "Update version of front-monitor-collector.js"
-    version=`cat collector/collector-version`
+    version=`cat /home/despegar/app/collector/collector-version`
 	for server in `ssh -i /home/despegar/.ssh/hf-static-00 hf-static-00 "cat /etc/cluster.info" | sed "s/{/\n/g" | grep "\-0" | cut -d '"' -f 4`; do
-		scp -i /home/despegar/.ssh/$server -rq /home/despegar/app/collector $server:/home/despegar/apache/www/public/front-monitor/js-versioned/"$version"
+		scp -i /home/despegar/.ssh/$server -rq /home/despegar/app/collector $server:/home/despegar/apache/www/public/front-monitor/js-versioned/$version
 	done
 fi
 
