@@ -130,7 +130,7 @@ module.exports = function (grunt) {
 //  grunt.loadTasks(depsPath + '/grunt-contrib-jst/tasks');
 //  grunt.loadTasks(depsPath + '/grunt-contrib-watch/tasks');
 //  grunt.loadTasks(depsPath + '/grunt-contrib-uglify/tasks');
-  grunt.loadTasks('grunt-contrib-uglify');
+  grunt.loadTasks('node_modules/grunt-contrib-uglify/tasks');
 //  grunt.loadTasks(depsPath + '/grunt-contrib-cssmin/tasks');
 //  grunt.loadTasks(depsPath + '/grunt-contrib-less/tasks');
 //  grunt.loadTasks(depsPath + '/grunt-contrib-coffee/tasks');
