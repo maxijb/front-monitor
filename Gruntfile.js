@@ -123,7 +123,9 @@ module.exports = function (grunt) {
 
   // Get path to core grunt dependencies from Sails
   var depsPath = grunt.option('gdsrc') || 'node_modules/sails/node_modules';
-  
+  console.log(process.argv);
+  console.log(process.argv[0]);
+  console.log(process.argv[1]);
   if (process.argv[1] == "buildClient") {
 	  grunt.loadTasks('node_modules/grunt-contrib-uglify/tasks');
   } else {
