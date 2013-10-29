@@ -32,7 +32,11 @@ module.exports[500] = function serverErrorOccurred(errors, req, res, expressErro
       message: displayedErrors[i].message,
       stack: displayedErrors[i].stack
     };
-
+    
+    
+    loggers.newrelic.error("Error Front-Monitor: " + displayedErrors[i].message);
+	loggers.udp("ERROR Front-Monitor: " + displayedErrors[i].message + " | STACK: " + displayedErrors[i].stack); 
+    
     // Log error to log adapter
     sails.log.error(displayedErrors[i].stack);
   }

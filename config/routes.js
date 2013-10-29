@@ -37,6 +37,11 @@ module.exports.routes = {
     action : 'show'
     // view: 'home/index'
   },
+  '/front-monitor/tirar': {
+	  controller : 'AdminController',
+	  action : 'tirar'
+		  // view: 'home/index'
+  },
   '/front-monitor': {
     controller : 'AdminController',
     action : 'show'

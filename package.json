@@ -15,7 +15,8 @@
     "errortoenglish-despegar": "0.0.6",
     "sails-mysql": "0.9",
     "source-map": "~0.1.30",
-    "mysql": "~2.0.0-alpha9"
+    "mysql": "~2.0.0-alpha9",
+    "newrelic": "~1.0.0"
   },
   "scripts": {
     "start": "node app.js",

@@ -121,7 +121,6 @@ module.exports = {
 		
 		var nowFormat=dateFormat(now.getTime(), "yyyy-mm-dd HH:MM:ss");
 
-
 		var queryText = params.text ? " AND (a.message LIKE '%" + params.text + "%' OR a.name LIKE '%" + params.text + "%') " : '';
 		var queryUrl = params.url ? " AND b.url LIKE '%" + params.url + "%' " : '';
 		var queryUow = params.uow ? " AND b.uow LIKE '%" + params.uow + "%' " : '';
@@ -209,6 +208,11 @@ module.exports = {
 			});
 		}
 		else res.json({});
+	},
+	
+	tirar : function(req, res) {
+		var x = dcjncdjndc();
+		res.json({maxi: "maxi"});
 	}
 
 
