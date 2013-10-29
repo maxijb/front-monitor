@@ -4,7 +4,7 @@ echo "...checking dependencies"
 if ! diff -b -B -q front-monitor/package.json app/package.json > /dev/null ; then
 	echo "downloading new dependencies"
   	cp app/package.json front-monitor/
-  	npm install 
+  	sudo npm install 
 fi
 
 if ! diff -b -B -q /home/despegar/app.bak/collector/collector-version /home/despegar/app/collector/collector-version > /dev/null ; then
