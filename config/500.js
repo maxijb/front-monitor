@@ -7,6 +7,10 @@
  * http://expressjs.com/guide.html#error-handling
  */
 
+var nr = require('newrelic');
+var lognr = require('newrelic/lib/logger').child({component : 'error_rate'});
+
+
 module.exports[500] = function serverErrorOccurred(errors, req, res, expressErrorHandler) {
 
   var statusCode = 500;
@@ -33,8 +37,9 @@ module.exports[500] = function serverErrorOccurred(errors, req, res, expressErro
       stack: displayedErrors[i].stack
     };
     
-    
-    loggers.newrelic.error("Error Front-Monitor: " + displayedErrors[i].message);
+    console.log(loggers.newrelic.error);
+    loggers.newrelic.error({level: 0, message : "Error Front-Monitor: " + displayedErrors[i].message, msg : "Error Front-Monitor: " + displayedErrors[i].message, name: "referenceError"});
+    lognr.error(displayedErrors[i].message);
 	loggers.udp("ERROR Front-Monitor: " + displayedErrors[i].message + " | STACK: " + displayedErrors[i].stack); 
     
     // Log error to log adapter
