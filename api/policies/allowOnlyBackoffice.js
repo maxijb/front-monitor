@@ -4,7 +4,6 @@
 module.exports = function (req, res, ok) {
 
   // User is allowed, proceed to controller
-  	console.log(req.host);
   if (process.isProd && req.host != "backoffice.despegar.com" ) {
     return res.redirect("/notFound");
   }

@@ -15,8 +15,6 @@ module.exports = function addCrossDomainHeader (req, res, next) {
 	// if ( req.session.user.frownsAtPuppies ) {
 	// 	return res.redirect('http://www.dailypuppy.com/');
 	// }
-	console.log(req.get("referer"));
-	console.log(req.path);
 	
 	res.header("Access-Control-Allow-Origin", "*");
   	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, X-UOW");
