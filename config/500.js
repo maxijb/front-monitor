@@ -7,8 +7,8 @@
  * http://expressjs.com/guide.html#error-handling
  */
 
-var nr = require('newrelic');
-var lognr = require('newrelic/lib/logger').child({component : 'error_rate'});
+//var nr = require('newrelic');
+//var lognr = require('newrelic/lib/logger').child({component : 'error_rate'});
 
 
 module.exports[500] = function serverErrorOccurred(errors, req, res, expressErrorHandler) {
@@ -37,13 +37,12 @@ module.exports[500] = function serverErrorOccurred(errors, req, res, expressErro
       stack: displayedErrors[i].stack
     };
     
-    console.log(loggers.newrelic.error);
-    loggers.newrelic.error({level: 0, message : "Error Front-Monitor: " + displayedErrors[i].message, msg : "Error Front-Monitor: " + displayedErrors[i].message, name: "referenceError"});
-    lognr.error(displayedErrors[i].message);
-	loggers.udp("ERROR Front-Monitor: " + displayedErrors[i].message + " | STACK: " + displayedErrors[i].stack); 
+    loggers.newrelic.error(displayedErrors[i].message);
+//    lognr.error(displayedErrors[i].message);
+	loggers.udp.error(displayedErrors[i].message + " | STACK: " + displayedErrors[i].stack); 
     
     // Log error to log adapter
-    sails.log.error(displayedErrors[i].stack);
+//    sails.log.error(displayedErrors[i].stack);
   }
 
   // In production, don't display any identifying information about the error(s)

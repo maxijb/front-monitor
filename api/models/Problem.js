@@ -29,7 +29,7 @@ connection.config.queryFormat = function (query, values) {
 	    }
 	    return txt;
 	  }.bind(this));
-	  console.log(finalQuery);
+	  loggers.udp.debug(finalQuery);
 	  return finalQuery;
 	};
 	
@@ -64,7 +64,7 @@ module.exports = {
   	
     if (values.stack && !values.file) {
   		matches = values.stack.match(/(http:.*?):(\d*?):?(\d*?)?(\s|\))/);
-  		console.log(matches);
+  		loggers.udp.debug(matches);
   		if (matches && matches.length > 3) {
   			values.file = matches[1];
         //chorme or || firefox
@@ -92,7 +92,7 @@ module.exports = {
    */
   create : function(params, cb) {
 	  if (!params.application) {
-		  console.log("Null application");
+		  loggers.udp.warning("Null application on create problem");
 		  return cb({"error" : "Null aplication"}, null);
 	  }
 	  
@@ -102,6 +102,7 @@ module.exports = {
 		  	  var pageview = extend({table : "pageview" + data.application}, Pageview.getDefaultObject(), data); 
 			  connection.query("INSERT INTO " + pageview.table + " SET url = :url, uow = :uow, custom_parameter = :custom_parameter, user_agent = :user_agent, browser = :browser, major_version = :major_version, cookies = :cookies, os = :os, createdAt = :createdAt", pageview, function(err, res) {
 				  if (err) {
+					  loggers.udp.error(err);
 					  cb(err, null); 
 				  }
 				  else {

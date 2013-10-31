@@ -1,4 +1,6 @@
 /**
+
+
  * Local environment settings
  *
  * While you're developing your app, this config file should include
@@ -22,6 +24,8 @@
  * http://sailsjs.org/#documentation
  */
 
+var loggers = require('../api/services/loggers');
+
 
 //settings
   process.staticContentUrl = "/front-monitor/";
@@ -29,15 +33,15 @@
   for (var i in process.argv) {
     if (process.argv[i] == "prod") {
       process.isProd = true;
-      console.info("Entering in PRODUCTION mode...");
+      loggers.udp.info("Entering in PRODUCTION mode...");
     }
     if (process.argv[i] == "updateModels") {
         process.updateModels = true;
-        console.info("We will update the models in the BD. This can take a little while...");
+        loggers.udp.info("We will update the models in the BD. This can take a little while...");
      }
   }
 
-  if (!process.isProd) console.info("Entering in DEVELOPMENT mode...");
+  if (!process.isProd) loggers.udp.info("Entering in DEVELOPMENT mode...");
 
 
 

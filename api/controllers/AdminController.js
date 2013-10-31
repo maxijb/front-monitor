@@ -125,13 +125,12 @@ module.exports = {
 		var queryUrl = params.url ? " AND b.url LIKE '%" + params.url + "%' " : '';
 		var queryUow = params.uow ? " AND b.uow LIKE '%" + params.uow + "%' " : '';
 
-		console.log("Buscando errores despues de " + limitBack);
-//		console.log(params);
-//		console.log("SELECT a.*, b.*, GROUP_CONCAT(a.id) as ids, COUNT(*) as quantity, DATE_FORMAT(MIN(a.created), ?) as since, DATE_FORMAT(MAX(a.created), ?) as until, GROUP_CONCAT(DISTINCT browser) as browsers FROM problem a LEFT JOIN pageview b ON (a.pageview = b.id) WHERE application = ? AND a.created >= ? AND a.created <= ? " + queryUow + queryText + queryUrl + "GROUP BY "+params.groupBy+" ORDER BY ?");
+		loggers.udp.info("Buscando errores despues de " + limitBack);
+		loggers.udp.debug("SELECT a.*, b.*, GROUP_CONCAT(a.id) as ids, COUNT(*) as quantity, DATE_FORMAT(MIN(a.created), ?) as since, DATE_FORMAT(MAX(a.created), ?) as until, GROUP_CONCAT(DISTINCT browser) as browsers FROM problem a LEFT JOIN pageview b ON (a.pageview = b.id) WHERE application = ? AND a.created >= ? AND a.created <= ? " + queryUow + queryText + queryUrl + "GROUP BY "+params.groupBy+" ORDER BY ?");
 		var q = Problem.query("SELECT a.*, b.*, GROUP_CONCAT(a.id) as ids, COUNT(*) as quantity, DATE_FORMAT(MIN(a.created), ?) as since, DATE_FORMAT(MAX(a.created), ?) as until, GROUP_CONCAT(DISTINCT browser) as browsers FROM problem" + params.application +" a LEFT JOIN pageview" + params.application +" b ON (a.pageview = b.id) WHERE a.created >= ? AND a.created <= ? " + queryUow + queryText + queryUrl + "GROUP BY "+params.groupBy+" ORDER BY " + params.orderBy, 
 						[tf.groupTimeFormatCluster, tf.groupTimeFormatCluster, limitBack, nowFormat], 
 						function(err, results) {
-							if (err) { console.log(err); res.send(500); }
+							if (err) { loggers.udp.error(err); res.send(500); }
 							if (params.format == 'json') res.json(results);
 							else res.view({layout: null, params : params, results: results});
 						});
@@ -162,15 +161,14 @@ module.exports = {
 				index: Math.floor(units / labelsCount * i)
 			});
 		}
-//		console.log(labels);
 
 
-		console.log("Buscando errores despues de " + limitBack);
-//		console.log("SELECT COUNT(*) as quantity, DATE_FORMAT(a.created, ?) as stamp, DATE_FORMAT(DATE_ADD(a.created, INTERVAL " + tf.groupTimeDescripticion + "), ?) as stampTo, FLOOR(TIME_TO_SEC(TIMEDIFF(a.created, ?)) / "+tf.groupTime+") as position  FROM problem" + params.application + " a LEFT JOIN pageview"+ params.application +" b ON (a.pageview = b.id) WHERE a.created >= ? AND a.created <= ? " + queryUow + queryText + queryUrl + "GROUP BY stamp, position ORDER BY stamp ASC"); 
+		loggers.udp.info("Buscando errores despues de " + limitBack);
+		loggers.udp.debug("SELECT COUNT(*) as quantity, DATE_FORMAT(a.created, ?) as stamp, DATE_FORMAT(DATE_ADD(a.created, INTERVAL " + tf.groupTimeDescripticion + "), ?) as stampTo, FLOOR(TIME_TO_SEC(TIMEDIFF(a.created, ?)) / "+tf.groupTime+") as position  FROM problem" + params.application + " a LEFT JOIN pageview"+ params.application +" b ON (a.pageview = b.id) WHERE a.created >= ? AND a.created <= ? " + queryUow + queryText + queryUrl + "GROUP BY stamp, position ORDER BY stamp ASC"); 
 		Problem.query("SELECT COUNT(*) as quantity, DATE_FORMAT(a.created, ?) as stamp, DATE_FORMAT(DATE_ADD(a.created, INTERVAL " + tf.groupTimeDescripticion + "), ?) as stampTo, FLOOR(TIME_TO_SEC(TIMEDIFF(a.created, ?)) / "+tf.groupTime+") as position  FROM problem" + params.application + " a LEFT JOIN pageview"+ params.application +" b ON (a.pageview = b.id) WHERE a.created >= ? AND a.created <= ? " + queryUow + queryText + queryUrl + "GROUP BY stamp, position ORDER BY stamp ASC", 
 			[tf.groupTimeFormat, tf.groupTimeFormat,  limitBack, limitBack, nowFormat], 
 			function(err, results) {
-				if (err) { console.log(err); res.send(500); }
+				if (err) { loggers.udp.error(err); res.send(500); }
 				var data = {};
 				for (var i in results) {
 					if (data[results[i].position]) results[i].position++;
@@ -184,30 +182,35 @@ module.exports = {
 		if (req.query.id) {
 			Problem.query("SELECT a.*, b.* FROM problem" + req.query.application + " a LEFT JOIN pageview" + req.query.application + " b ON (a.pageview = b.id) WHERE a.id = "+req.query.id, function(err, results) {
 				if (err) { 
-					console.log(err);
+					loggers.udp.error(err);
 					res.json({});
 				}
-				console.log(results[0].created);
 				results[0].created = dateFormat(results[0].created, "yyyy-mm-dd HH:MM:ss");
 				results[0].timestamp /= 1000;
 				results[0].timestamp += " seconds after page load.";
 				res.json(results);
 			});
 		}
-		else res.json({});
+		else {
+			loggers.udp.error("Null id on getError");
+			res.json({});
+		}
 	},
 
 	parseUA : function(req, res) {
 		if (req.query.id) {
 			Problem.query("SELECT b.user_agent FROM problem" + req.query.application + " a LEFT JOIN pageview" + req.query.application + " b ON (a.pageview = b.id) WHERE a.id = "+req.query.id, function(err, results) {
 				if (err) {
-					console.log(err);
+					loggers.udp.error(err);
 					res.json({});
 				}
 				else res.json(parser.setUA(results[0].user_agent).getResult());
 			});
 		}
-		else res.json({});
+		else {
+			loggers.udp.error("Null id on parseUA");
+			res.json({});
+		}
 	},
 	
 	tirar : function(req, res) {

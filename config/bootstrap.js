@@ -9,7 +9,7 @@
  */
 
 module.exports.bootstrap = function (cb) {
-  console.log("Getting applications");
+  loggers.udp.info("Getting applications");
   //Genera snapshot de aplicaciones
   Application.find({}, function(err, results) {
   	if (err) console.log(err);
@@ -26,7 +26,7 @@ module.exports.bootstrap = function (cb) {
               setInterval(function() {
             	  				jobs.deleteOldRecords(process.data.applications);
               				}, (60*60*24*1000));
-              console.info("Job for removing old logs will be executed in 24 hs again.");
+              loggers.udp.info("Job for removing old logs will be executed in 24 hs again.");
         });
       } else {
     	  // It's very important to trigger this callack method when you are finished 
