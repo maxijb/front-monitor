@@ -117,7 +117,7 @@ module.exports = {
 		var now = new Date();
 		//saca la hora sumandole el timeoffset * millisegundos y resta el time back correspondiente
 		var limitBack = new Date(now.getTime() - tf.back);
-		var limitBack=dateFormat(limitBack, "yyyy-mm-dd HH:MM:ss");
+		limitBack=dateFormat(limitBack, "yyyy-mm-dd HH:MM:ss");
 		
 		var nowFormat=dateFormat(now.getTime(), "yyyy-mm-dd HH:MM:ss");
 
