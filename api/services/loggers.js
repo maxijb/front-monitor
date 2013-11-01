@@ -17,7 +17,6 @@ exports.udp = {
 		log : function(origMessage) {
 			var message = new Buffer(origMessage);
 			
-			
 			client.send(message, 0, message.length, 32096, "10.1.1.107", function(err, bytes) {
 				if (err) console.log("error logging UDP");
 				console.log(origMessage);
@@ -28,7 +27,7 @@ exports.udp = {
 			exports.udp.format(message, "DEBUG", 10);
 		},
 		trace : function(message) {
-			exports.udp.format(message, "DEBUG", 20);
+			exports.udp.format(message, "TRACE", 20);
 		},
 		info : function(message) {
 			exports.udp.format(message, "INFO", 30);

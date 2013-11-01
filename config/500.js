@@ -60,11 +60,12 @@ module.exports[500] = function serverErrorOccurred(errors, req, res, expressErro
   // If an error occurs rendering the 500 view ITSELF,
   // use the built-in Express error handler to render the errors
   var view = '500';
-  res.render(view, response, function (err) {
-    if (err) {
-      return expressErrorHandler(errors);
-    }
-    res.render(view, response);
-  });
+  res.send(500);
+//  res.render(view, response, function (err) {
+//    if (err) {
+//      return expressErrorHandler(errors);
+//    }
+//    res.render(view, response);
+//  });
 
 };

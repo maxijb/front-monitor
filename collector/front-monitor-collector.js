@@ -157,7 +157,7 @@ window.FrontMonitor = (function() {
 		setWindowOnError();
 		// override manual entered functions
 		for ( var i in Config.overrideFunctions) {
-			override($.trim(Config.overrideFunctions[i]));
+			override(Config.overrideFunctions[i]);
 		}
 
 		// override jquery.fn.on
@@ -309,20 +309,28 @@ window.FrontMonitor = (function() {
 			params += k + '=' + encodeURIComponent(err[k]) + '&';
 		}
 		var url = Config.serviceUrl + '?' + params.substring(0, params.length -1);
-		if (!window.XDomainRequest)
-		$.get(url, function(d) { handleResponse(d); });
-		else {
-			try {
-			var xdr = new XDomainRequest();
-			xdr.open("GET", url);
-			xdr.onload = function() {
-				handleResponse(xdr.responseText);
-			};
-			xdr.send();
+		
+		try {
+			if (!window.XDomainRequest) {
+				var xhr = new XMLHttpRequest();
+				xhr.open("GET", url, true);
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == 4) {
+						handleResponse(xhr.responseText);
+					}
+				};
+				xhr.send(null);
 			}
-			catch (e) {
-//				alert(e);
+			else {
+				
+				var xdr = new XDomainRequest();
+				xdr.open("GET", url);
+				xdr.onload = function() {
+					handleResponse(xdr.responseText);
+				};
+				xdr.send();
 			}
+		} catch (e) {
 		}
 	}
 
@@ -367,7 +375,7 @@ window.FrontMonitor = (function() {
 		   "textStatus" : ""
 		};
 		
-		$.extend(_options, options);
+		extend(_options, options);
 		
 
 		try {
@@ -400,7 +408,7 @@ window.FrontMonitor = (function() {
 				   "message" : "",
 				   "stack" : ""
 					};
-			$.extend(_options, message);
+			extend(_options, message);
 			captureException(null, _options);
 		}
 	}
@@ -411,6 +419,17 @@ window.FrontMonitor = (function() {
 	 */
 	function getConfig() {
 		return Config;
+	}
+	
+	/**
+	 * Extiende un objeto, mimic de $.extend
+	 */
+	function extend(){
+	    for(var i=1; i<arguments.length; i++)
+	        for(var key in arguments[i])
+	            if(arguments[i].hasOwnProperty(key))
+	                arguments[0][key] = arguments[i][key];
+	    return arguments[0];
 	}
 	
 	return {
