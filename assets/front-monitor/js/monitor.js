@@ -81,10 +81,11 @@ $(document).ready(function() {
 					}
 					var parseBtn = (i == "user_agent") ? "<a class='parse btn'>Parse</a>" : '';
 					if (i != 'id' && i != "pageview")
-					html += "<p><label>" + i + ": </label><span>" +d[i]+"</span>" +parseBtn+ "</p>";  
+					html += "<p class='" + i + "'><label>" + i + ": </label><span>" +d[i]+"</span>" +parseBtn+ "</p>";  
 
 				}
-				$('#popup').removeClass('loading').find('.frame').html(html);
+				$('#popup').removeClass('loading').find('.frame').html(html)
+						.find('.cookies').append('<a class="copyCookies btn btn-primary">Copy cookies for console</a>');
 			}
 		}, 'json')
 	}).on('click', '.parse', function() {
@@ -94,6 +95,14 @@ $(document).ready(function() {
 		$.get("/front-monitor/parseUA", {id : id, application : app }, function(d) {
 			$this.closest('p').after("<p class='user_agent'>" + JSON.stringify(d) + "</p>").next().slideDown(500);
 		})
+	}).on("click", ".copyCookies", function() {
+		var cookies = $(this).prev("span").text().split("; ");
+		var text = "javascript:(function(){ ";
+		for (var i in cookies) {
+			text += "document.cookie='" + cookies[i] + ";path=/'; ";
+		}
+		text += "})()";
+		copyToClipboard(text);
 	});
 
 	$('#popup .close').click(function() {
@@ -185,4 +194,8 @@ function getParams(filtered) {
 function search() {
 	alert("si");
 	$('.do_search').click();
+}
+
+function copyToClipboard (text) {
+  window.prompt ("Copy to clipboard: Ctrl+C, Enter", text);
 }

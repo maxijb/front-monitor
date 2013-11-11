@@ -110,8 +110,7 @@ window.FrontMonitor = (function() {
 			// If the dom has alredy loaded, call 'whenReady' right away.
 			// Otherwise bind the ready-event if it hasn't been done already
 			readyList.push(callback);
-			if (document.readyState == "complete"
-					|| document.readyState == "interactive") {
+			if (document.readyState == "complete") {
 				whenReady();
 			} else if (!isBound) {
 				bindReady();
@@ -160,46 +159,48 @@ window.FrontMonitor = (function() {
 			override(Config.overrideFunctions[i]);
 		}
 
-		// override jquery.fn.on
-		Config.jQuery_fn_on_original = Config.jQuery_fn_on_original || jQuery.fn.on;
-		jQuery.fn.on = function() {
-			var args = Array.prototype.slice.call(arguments), fnArgIdx = 4;
-
-			// Search index of function argument
-			while ((--fnArgIdx > -1) && (typeof args[fnArgIdx] !== 'function'))
-				;
-
-			// If the function is not found, then subscribe original event
-			// handler function
-			if (fnArgIdx === -1) {
-				return Config.jQuery_fn_on_original.apply(this, arguments);
-			}
-
-			// If the function is found, then subscribe wrapped event handler
-			// function
-			args[fnArgIdx] = (function(fnOriginHandler) {
-				return function() {
-					var argums = Array.prototype.slice.call(arguments);
-//					origArgums = arguments;
-//					console.log(arguments.callee);
-					try {
-						fnOriginHandler.apply(this, arguments);
-					} catch (e) {
-//						ee = args;
-//						console.log(origArgums[0]);
-//						console.log(fnOriginHandler);
-//						fnorig = fnOriginHandler;
-//						err = qwe;
-						captureException(argums, e);
-					}
-				};
-			})(args[fnArgIdx]);
-
-			// Call original jQuery.fn.on, with the same list of arguments, but
-			// a function replaced with a proxy.
-			return Config.jQuery_fn_on_original.apply(this, args);
-		};
 		
+		if (window.jQuery) {
+			// override jquery.fn.on
+			Config.jQuery_fn_on_original = Config.jQuery_fn_on_original || jQuery.fn.on;
+			jQuery.fn.on = function() {
+				var args = Array.prototype.slice.call(arguments), fnArgIdx = 4;
+	
+				// Search index of function argument
+				while ((--fnArgIdx > -1) && (typeof args[fnArgIdx] !== 'function'))
+					;
+	
+				// If the function is not found, then subscribe original event
+				// handler function
+				if (fnArgIdx === -1) {
+					return Config.jQuery_fn_on_original.apply(this, arguments);
+				}
+	
+				// If the function is found, then subscribe wrapped event handler
+				// function
+				args[fnArgIdx] = (function(fnOriginHandler) {
+					return function() {
+						var argums = Array.prototype.slice.call(arguments);
+	//					origArgums = arguments;
+	//					console.log(arguments.callee);
+						try {
+							fnOriginHandler.apply(this, arguments);
+						} catch (e) {
+	//						ee = args;
+	//						console.log(origArgums[0]);
+	//						console.log(fnOriginHandler);
+	//						fnorig = fnOriginHandler;
+	//						err = qwe;
+							captureException(argums, e);
+						}
+					};
+				})(args[fnArgIdx]);
+	
+				// Call original jQuery.fn.on, with the same list of arguments, but
+				// a function replaced with a proxy.
+				return Config.jQuery_fn_on_original.apply(this, args);
+			};
+		}
 		//si ya hay errores que los trackee
 		trackAndResetErrors();
 	});

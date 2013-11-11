@@ -124,6 +124,13 @@ box-shadow:         7px 7px 5px rgba(50, 50, 50, 0.75);
 	text-transform: capitalize;;
 }
 
+#popup .frame .copyCookies {
+	display: block;
+	width: 33%;
+	clear: both;
+	margin: 15px 0;
+}
+
 #popup .close {
 	top: 14px;
 	right: 6px;
