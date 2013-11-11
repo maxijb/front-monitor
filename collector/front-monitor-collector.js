@@ -55,8 +55,7 @@ window.FrontMonitor = (function() {
 			} else if (document.attachEvent) {
 
 				var onreadystatechange = function() {
-					if (document.readyState === "complete"
-							|| document.readyStateChange == 'interactive') {
+					if (document.readyState === "complete") {
 						document.detachEvent("onreadystatechange",
 								onreadystatechange);
 						whenReady();
