@@ -14,11 +14,11 @@ var extend = require("extend");
 var mysql  = require('mysql');
 
 var connection = mysql.createConnection({
-	host    : 'mysql-test',
-    port : 64220,
-    user    : 'front_app',
-    password  : 'tn0f4859',
-    database  : 'front_monitor'
+	host    : 'mysql-front-mon-00',
+    port : 33033,
+    user    : 'root',
+    password  : 'despegar#mysql',
+    database  : 'front-monitor'
 });
 
 connection.config.queryFormat = function (query, values) {
