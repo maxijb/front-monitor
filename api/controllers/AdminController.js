@@ -14,6 +14,20 @@ var defaultParams = {
 
 }
 
+var fields = [
+	"name",
+	"message",
+	"stack",
+	"file",
+	"event_type",
+	"event_target",
+	"event_selector",
+	"cookies",
+	"browser",
+	"custom_parameter",
+	"uow"
+];
+
 var timeframes = {
 	'30m' : {
 		code: '30m',
@@ -101,6 +115,7 @@ module.exports = {
 	show : function(req, res) {
 		var params = extend({}, defaultParams, req.query);
 		var view = {
+			section : "errors",
 			applications : process.data.applications,
 			title : "Errors on " + process.data.applications[params.application].name,
 			timeframes : timeframes,
@@ -213,9 +228,24 @@ module.exports = {
 		}
 	},
 	
-	tirar : function(req, res) {
-		var x = dcjncdjndc();
-		res.json({maxi: "maxi"});
+	rules : function(req, res) {
+		var params = extend({}, defaultParams, req.query);
+		var view = {
+			section : "rules",
+			applications : process.data.applications,
+			title : "Errors on " + process.data.applications[params.application].name,
+			timeframes : timeframes,
+			params : params,
+			fields: fields,
+			conditions : [
+				{value: "equals", text: "Equals" },
+				{value: "notEquals", text: "NOT Equals" },
+				{value: "contains", text: "Contains" },
+				{value: "notContains", text: "NOT Contains" }
+			]
+		}
+		res.header("Content-Type", "text/html; charset=utf-8");
+		res.view(view);
 	}
 
 

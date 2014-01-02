@@ -1,0 +1,65 @@
+<% include ../partial/header %>
+
+<div class='container row show-grid rules'>
+	<h3>Rules to ignore errors for application <%= applications[params.application].name %></h3>
+	<div class='results'>
+			<div class='line head'>
+				<span class='field'>Field</span>
+				<span class='condition'>Condition</span>
+				<span class='value'>Value</span>
+			</div>
+			<% if (applications[params.application].rules.length) { %>
+					<% _.each(applications[params.application].rules, function (rule) { %>
+		          			<div class='rule line' id='<%= rule.id %>' data-application="<%=params.application%>">
+		          				<span class='field'>
+		          					<select>
+										<% _.each(fields, function (field) { %>
+											<option value="<%= field %>" <% if (field == rule.field) {%>selected='selected'<% } %>><%= field %></option>
+		          						<% }) %>
+									</select>
+		          				</span>
+								<span class='condition'>
+									<select>
+										<% _.each(conditions, function (cond) { %>
+											<option value="<%= cond.value %>" <% if (cond.value == rule.condition) {%>selected='selected'<% } %>><%= cond.text %></option>
+		          						<% }) %>
+									</select>
+								</span>
+								<span class='value'>
+									<input type='text' value='<%= rule.value %>'>
+								</span>
+								<a class='btn btn-danger delete'>Delete</a>
+								<a class='btn btn-info save'>Save</a>
+		          			</div>
+		          	<% }) %>
+		    <% } else { %> <h5>No rules for this application yet...</h5> <% } %>
+
+		    	<p>
+		    		<a class='btn btn-primary' id='create'>Create new rule</a>
+		    	</p>
+
+          			<div class='rule line example unsaved' id='0' data-application="<%=params.application%>">
+          				<span class='field'>
+          					<select>
+								<% _.each(fields, function (field) { %>
+									<option value="<%= field %>"><%= field %></option>
+          						<% }) %>
+							</select>
+          				</span>
+						<span class='condition'>
+							<select>
+								<% _.each(conditions, function (cond) { %>
+									<option value="<%= cond.value %>"><%= cond.text %></option>
+          						<% }) %>
+							</select>
+						</span>
+						<span class='value'>
+							<input type='text' value=''>
+						</span>
+						<a class='btn btn-danger delete'>Delete</a>
+						<a class='btn btn-info save'>Save</a>
+          			</div>
+	</div>
+</div>
+
+

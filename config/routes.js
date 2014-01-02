@@ -73,6 +73,11 @@ module.exports.routes = {
     cors :  true
   },
 
+  '/front-monitor/rules' : {
+    controller : 'AdminController',
+    action : 'rules'
+  },
+
   '/front-monitor/parseUA' : {
     controller : 'AdminController',
     action : 'parseUA'

@@ -29,7 +29,7 @@ connection.config.queryFormat = function (query, values) {
 	    }
 	    return txt;
 	  }.bind(this));
-	  loggers.udp.debug(finalQuery);
+	  // loggers.udp.debug(finalQuery);
 	  return finalQuery;
 	};
 	
@@ -38,7 +38,7 @@ connection.config.queryFormat = function (query, values) {
 module.exports = {
 	
 	autoCreatedAt: false,
-  	autoUpdatedAt: false,
+  autoUpdatedAt: false,
 
   attributes: {
   	
@@ -57,6 +57,7 @@ module.exports = {
   	created : 'timestamp'
   	
   },
+
 
   beforeCreate: function(values, next) {
     values.url = values.baseUrl;
@@ -95,6 +96,10 @@ module.exports = {
 		  loggers.udp.warning("Null application on create problem");
 		  return cb({"error" : "Null aplication"}, null);
 	  }
+
+    if (!rulesService.validate(params)) {
+      return cb({"error" : "Rules ignore this error."})
+    }
 	  
 	  module.exports.beforeCreate(params, function(data) {
 			if (!data.pageview) {
@@ -125,6 +130,7 @@ module.exports = {
 
 };
 
+
 /**
  * Guarda el prblema y llama al cb
  * @param data
@@ -132,7 +138,8 @@ module.exports = {
  */
 function saveProblem(data, cb) {
 	var problem = extend({table : "problem" + data.application}, defaultObject, data);
-	  connection.query("INSERT INTO " + problem.table + " SET name = :name, message = :message, file = :file, line = :line, `char` = :char, stack = :stack, event_type = :event_type, event_target = :event_target, event_selector = :event_selector, timestamp = :timestamp, pageview = :pageview, created = :created", problem, function(error, resp) {
+    connection.query("INSERT INTO " + problem.table + " SET name = :name, message = :message, file = :file, line = :line, `char` = :char, stack = :stack, event_type = :event_type, event_target = :event_target, event_selector = :event_selector, timestamp = :timestamp, pageview = :pageview, created = :created", problem, function(error, resp) {
+	  // connection.query(null, problem, function(error, resp) {
 		  if (error) {
 			  cb(error, null); 
 		  }
@@ -160,11 +167,9 @@ function createDefaultObject() {
 
 function completeCreate(ua, values, next) {
 	if (ua.browser.name == "IE") {
-		// console.log(values);
+		// si es internet explorer podemos traducir los errores al ingles
   		errorToEnglish(values.message, function(err, translation){
-  			// console.log(translation);
-  			// console.log(err);
-  			if (translation) values.message = translation;
+  		if (translation) values.message = translation;
 			 next(values);
 			});
   	}

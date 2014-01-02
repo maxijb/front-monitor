@@ -197,3 +197,51 @@ table {
 	word-wrap: break-word;
 }
 table th, table td { overflow: hidden; }
+
+.container.rules .line.head {
+	font-weight: bold;
+	margin: 0;
+}
+
+.container.rules .line {
+  margin: 10px 0;
+  position: relative;
+  overflow: hidden;
+  padding: 5px 2%;
+  clear: both;
+}
+.container.rules .line a {
+	float: left;
+}
+.container.rules .line select, .container.rules .line input { 
+	margin: 0;
+	width: 90%
+}
+
+.container.rules .line:nth-child(even) {
+	background: #ddd;
+}
+
+.container.rules .line span {
+  width: 25%;
+  float: left;
+}
+
+.container.rules .line.example {
+  display: none;
+}
+
+.container.rules .line .save {
+	display: none;
+	margin-left: 10px;
+}
+.container.rules .line.modified .save {
+	display: block;
+}
+.container.rules .line.unsaved .delete {
+	display: none;
+}
+
+
+
+

@@ -1,5 +1,6 @@
 var dateFormat = require("dateformat");
 
+
 /**
  * Job para borrar logueos de mas de una semana de antiguedad
  */

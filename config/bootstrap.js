@@ -19,22 +19,27 @@ module.exports.bootstrap = function (cb) {
   		for (var i in results) {
   			process.data.applications[results[i].id] = results[i];
   		}
-      if (process.isProd) {
-        jobs.checkForCreatedTables(process.data.applications, function() {
-            //tira y genera el interval para borrar logs viejos una vez por dia
-              jobs.deleteOldRecords(process.data.applications, cb);
-              setInterval(function() {
-            	  				jobs.deleteOldRecords(process.data.applications);
-              				}, (60*60*24*1000));
-              loggers.udp.info("Job for removing old logs will be executed in 24 hs again.");
-        });
-      } else {
-    	  // It's very important to trigger this callack method when you are finished 
-    	  // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
-    	  cb();
-      } 
+      console.log(rulesService);
+      rulesService.cacheByApplication(null, doProdJobs, cb);
     }
   });
 
 
 };
+
+function doProdJobs(cb) {
+      if (process.isProd) {
+        jobs.checkForCreatedTables(process.data.applications, function() {
+            //tira y genera el interval para borrar logs viejos una vez por dia
+              jobs.deleteOldRecords(process.data.applications, cb);
+              setInterval(function() {
+                        jobs.deleteOldRecords(process.data.applications);
+                      }, (60*60*24*1000));
+              loggers.udp.info("Job for removing old logs will be executed in 24 hs again.");
+        });
+      } else {
+        // It's very important to trigger this callack method when you are finished 
+        // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
+        cb();
+      } 
+}

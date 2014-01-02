@@ -1,0 +1,33 @@
+<div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="navbar-inner">
+     <a class="brand" href="#">FrontMonitor</a>
+     <ul class='nav' id='applications'>
+             <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-id='<%= params.application %>'> <%= applications[params.application].name %><b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                          <% _.each(applications, function (app) { %>
+                          <li><a href="#" data-id="<%= app.id %>"><%= app.name %></a></li>
+                          <% }) %>
+                        </ul>
+              </li>
+     </ul>
+     <%if (section == 'errors') {%>
+       <ul class='nav' id='timestamps'>
+               <li class="dropdown">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-id='<%= params.timeframe %>'> <%= timeframes[params.timeframe].description %><b class="caret"></b></a>
+                          <ul class="dropdown-menu">
+                            <% _.each(timeframes, function (timeframe) { %>
+                            <li><a href="#" data-id="<%= timeframe.code %>"><%= timeframe.description %></a></li>
+                            <% }) %>
+                          </ul>
+                </li>
+       </ul>
+     <% } %>
+     <%if (section != 'rules') {%>
+       <a class='logout' href='/front-monitor/rules?application=<%=params.application%>'>Rules to ignore errors</a>
+     <% } %>
+     <%if (section != 'errors') {%>
+       <a class='logout' href='/front-monitor/?application=<%=params.application%>'>Go back to errors page</a>
+     <% } %>
+  </div>
+</div>
