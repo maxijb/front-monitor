@@ -35,7 +35,7 @@ exports.validate = function(problem) {
 	if (rules && rules.length) {
 		for (var i = 0; i < rules.length; i++) {
 			var rule = rules[i];
-			if (operations[rule.condition](problem[rule.field], rule.value)) {
+			if (operations[rule.condition](problem[rule.field].toString().toLowerCase(), rule.value.toString().toLowerCase())) {
 				return false;
 			}
 		}
