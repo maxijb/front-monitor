@@ -147,8 +147,6 @@ window.FrontMonitor = (function() {
 		Config.overrideFunctions = overrideData;
 
 		
-//		console.log(Config);
-		
 	// on document ready
 	window.onDomReadyIdentifierLogger(function() {
 		Config.ready = true;
@@ -181,13 +179,10 @@ window.FrontMonitor = (function() {
 					return function() {
 						var argums = Array.prototype.slice.call(arguments);
 	//					origArgums = arguments;
-	//					console.log(arguments.callee);
 						try {
 							fnOriginHandler.apply(this, arguments);
 						} catch (e) {
 	//						ee = args;
-	//						console.log(origArgums[0]);
-	//						console.log(fnOriginHandler);
 	//						fnorig = fnOriginHandler;
 	//						err = qwe;
 							captureException(argums, e);
@@ -226,18 +221,42 @@ window.FrontMonitor = (function() {
 		};
 	}
 	
-	
+	/**
+	* Saca el nombre y los parametros del caller
+	*/
+	function getFunctionSignatureFromCaller(text) {
+		return text.match(/^\s*function.*\(.*?\)/i);
+	}
+
+
 	// capture and handle different kinds of exceptions
 	function captureException(args, error, basicTracking) {
 		var thisError;
 		if (basicTracking) {
 			var message = args[0]
 			thisError = {
+				event_type : "window.onerror",
 				message : args[0],
 				file : args[1],
 				line : args[2],
+				char: args[3] || 0,
 				timestamp : new Date().getTime() - Config.initialTime
 			};
+
+			if (args[4]) {
+				thisError.stack = args[4].stack;
+			} 
+			else if (args.callee && args.callee.caller) {
+				var orig = args.callee;
+				var stack = [];
+				var num = 0;
+				while (orig.caller && num < 10) {
+					num++;
+					stack.push(getFunctionSignatureFromCaller(orig.caller.toString()));
+					orig = orig.caller;
+				}
+				thisError.stack = stack.join(' | ');
+			}
 		} else {
 			if (Config.logErrorsToConsole && window.console && console.error) {
 				 console.error(error);
@@ -304,6 +323,7 @@ window.FrontMonitor = (function() {
 	}
 	
 	function trackError(err) {
+		lastEx = err;
 		var params = '';
 		for (var k in err) {
 			params += k + '=' + encodeURIComponent(err[k]) + '&';
