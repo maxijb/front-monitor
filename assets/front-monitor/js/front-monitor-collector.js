@@ -368,9 +368,6 @@ window.FrontMonitor = (function() {
 					var xhr = new XMLHttpRequest();
 					xhr.open("POST", url, true);
 					//Send the proper header information along with the request
-					xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-					xhr.setRequestHeader("Content-length", params.length);
-					xhr.setRequestHeader("Connection", "close");
 					xhr.onreadystatechange = function() {
 						if (xhr.readyState == 4) {
 							handleResponse(xhr.responseText);
@@ -380,12 +377,15 @@ window.FrontMonitor = (function() {
 				}
 				else {
 					console.log("XDR");
+					console.log(url);
+					console.log(params);
 					var xdr = new XDomainRequest();
 					xdr.open("POST", url);
 					xdr.onerror = function() {
 						console.log("errro");
 					}
 					xdr.onload = function() {
+						console.log(xdr.responseText);
 						handleResponse(xdr.responseText);
 					};
 					xdr.send(params);
