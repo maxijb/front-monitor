@@ -3,12 +3,12 @@
  */
 module.exports = function (req, res, ok) {
 
-  // User is allowed, proceed to controller
+  // User is not allowed
   if (process.isProd && req.host != "backoffice.despegar.com" ) {
     return res.redirect("/notFound");
   }
 
-  // User is not allowed
+  // User is allowed, proceed to controller
   else {
     return ok();
   }

@@ -324,80 +324,37 @@ window.FrontMonitor = (function() {
 	
 	function trackError(err) {
 		lastEx = err;
-		var params = [];
+		var params = '';
 		for (var k in err) {
-			params.push(k + '=' + encodeURIComponent(err[k]));
+			params += k + '=' + encodeURIComponent(err[k]) + '&';
 		}
-		console.log(params);
-		params = params.join('&');
-
-		//si son hatsa 1900 caracteres lo mandamos por GET
-		if (params.length <= 100) {
-			var url = Config.serviceUrl + '?' + params;
-			
-			try {
-				if (!window.XDomainRequest) {
-					var xhr = new XMLHttpRequest();
-					xhr.open("GET", url, true);
-					xhr.onreadystatechange = function() {
-						if (xhr.readyState == 4) {
-							handleResponse(xhr.responseText);
-						}
-					};
-					xhr.send(null);
-				}
-				else {
-					
-					var xdr = new XDomainRequest();
-					xdr.open("GET", url);
-					xdr.onload = function() {
-						handleResponse(xdr.responseText);
-					};
-					xdr.send();
-				}
-			} catch (e) {
-			}
-
-
-		//si son mas de 1900 caracteres lo mandamos por post	
-		} else {
-			console.log("post");
-			var url = Config.serviceUrl;
-			try {
-				if (!window.XDomainRequest) {
-					var xhr = new XMLHttpRequest();
-					xhr.open("POST", url, true);
-					//Send the proper header information along with the request
-					xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-					xhr.setRequestHeader("Content-length", params.length);
-					xhr.setRequestHeader("Connection", "close");
-					xhr.onreadystatechange = function() {
-						if (xhr.readyState == 4) {
-							handleResponse(xhr.responseText);
-						}
-					};
-					xhr.send(params);
-				}
-				else {
-					console.log("XDR");
-					var xdr = new XDomainRequest();
-					xdr.open("POST", url);
-					xdr.onerror = function() {
-						console.log("errro");
+		var url = Config.serviceUrl + '?' + params.substring(0, params.length -1);
+		
+		try {
+			if (!window.XDomainRequest) {
+				var xhr = new XMLHttpRequest();
+				xhr.open("GET", url, true);
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == 4) {
+						handleResponse(xhr.responseText);
 					}
-					xdr.onload = function() {
-						handleResponse(xdr.responseText);
-					};
-					xdr.send(params);
-				}
-			} catch (e) {
+				};
+				xhr.send(null);
 			}
+			else {
+				
+				var xdr = new XDomainRequest();
+				xdr.open("GET", url);
+				xdr.onload = function() {
+					handleResponse(xdr.responseText);
+				};
+				xdr.send();
+			}
+		} catch (e) {
 		}
-
 	}
 
 	function handleResponse(data) {
-		console.log("handleResponse");
 		if (!Config.pageview) {
 			try {
 				var responseJson = eval("(" + data + ")");

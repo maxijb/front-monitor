@@ -2,7 +2,7 @@
  * ProblemController
  *
  * @module		:: Controller
- * @description	:: Contains logic for handling requests.
+ * @description	:: Se encarga de guaradr los nuevos problemas
  */
 
 
@@ -10,28 +10,17 @@ var extend = require("extend");
 
 module.exports = {
 
-  /* e.g.
-  sayHello: function (req, res) {
-    res.send('hello world!');
-  }
-  */
   create : function(req, res) {
-//	  var pageview = extend({table : "pageview" + req.query.application}, Pageview.getDefaultObject(), req.query); 
-//	  connection.query("SELECT * FROM " + pageview.table + " WHERE application = :application", pageview, function(err, res) {
-//		  console.log(err);
-//	  });
-////	  console.log(Problem);
-//	  res.json(Problem.attributes);
-//	  
-//	  
-////	  console.log(result.insertId);
-//  }
-	  
-	    Problem.create(req.query, function(err, result) {
-	    
+	
+	//Extiende los valores que vienen por post sobre los que vienen por get
+	//de esta forma el controller es agnostico en cuanto a metodo http
+	extend(req.query, req.body);
+	//Luego crea el nuevo problema con los query
+    Problem.create(req.query, function(err, result) {
 		  res.json(result || err);
-	    });
-	  }
+    });
+    
+  }
 
 };
 
