@@ -149,7 +149,7 @@ window.FrontMonitor = (function() {
 		
 	// on document ready
 	window.onDomReadyIdentifierLogger(function() {
-		Config.ready = true;
+
 		setWindowOnError();
 		// override manual entered functions
 		for ( var i in Config.overrideFunctions) {
@@ -178,13 +178,9 @@ window.FrontMonitor = (function() {
 				args[fnArgIdx] = (function(fnOriginHandler) {
 					return function() {
 						var argums = Array.prototype.slice.call(arguments);
-	//					origArgums = arguments;
 						try {
 							fnOriginHandler.apply(this, arguments);
 						} catch (e) {
-	//						ee = args;
-	//						fnorig = fnOriginHandler;
-	//						err = qwe;
 							captureException(argums, e);
 						}
 					};
@@ -195,9 +191,57 @@ window.FrontMonitor = (function() {
 				return Config.jQuery_fn_on_original.apply(this, args);
 			};
 		}
-		//si ya hay errores que los trackee
-		trackAndResetErrors();
+
+		//si es IE nos fijamos si tiene JSON ya que lo necesita
+		//si no lo tiene lo carga y usamos un timeout ya que necesita un tiempo para el 
+		if (window.XDomainRequest) {
+			if (!window.JSON) {
+				loadJSONScript();
+			} else {
+				//IE necesita un tiempo para inicializar el xdomain y que los posts salgan
+				setTimeout(trackingReadyInit, 4000);
+				// trackingReadyInit();
+			}
+		} else {
+			trackingReadyInit();
+		}
+
+
 	});
+
+	/**
+	*Carga la libreria de JSON para ie 7 y menor
+	*/
+	function loadJSONScript() {
+		var oHead = document.getElementsByTagName('head')[0];
+		var oScript = document.createElement('script');
+		oScript.type = 'text/javascript';
+		oScript.src = "//cdnjs.cloudflare.com/ajax/libs/json2/20130526/json2.min.js";
+		// most browsers
+		oScript.onload = timeAndLoad;
+		// IE 6 & 7
+		oScript.onreadystatechange = function() {
+			if (this.readyState == 'complete') {
+				timeAndLoad();
+			}
+		}
+		oHead.appendChild(oScript);
+
+		function timeAndLoad() {
+			//IE necesita un tiempo para inicializar el xdomain y que los posts salgan
+			setTimeout(trackingReadyInit, 4000);
+		}
+	}
+
+
+	/**
+	* Starts tarcaking now
+	**/
+	function trackingReadyInit() {
+		Config.ready = true;
+		trackAndResetErrors();
+	}
+
 
 	// oiverride functions
 	function override(func) {
@@ -328,7 +372,6 @@ window.FrontMonitor = (function() {
 		for (var k in err) {
 			params.push(k + '=' + encodeURIComponent(err[k]));
 		}
-		console.log(params);
 		params = params.join('&');
 
 		//si son hatsa 1900 caracteres lo mandamos por GET
@@ -361,33 +404,30 @@ window.FrontMonitor = (function() {
 
 		//si son mas de 1900 caracteres lo mandamos por post	
 		} else {
-			console.log("post");
 			var url = Config.serviceUrl;
 			try {
 				if (!window.XDomainRequest) {
 					var xhr = new XMLHttpRequest();
 					xhr.open("POST", url, true);
+					xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 					//Send the proper header information along with the request
 					xhr.onreadystatechange = function() {
 						if (xhr.readyState == 4) {
 							handleResponse(xhr.responseText);
 						}
 					};
+
 					xhr.send(params);
 				}
 				else {
-					console.log("XDR");
-					console.log(url);
-					console.log(params);
 					var xdr = new XDomainRequest();
 					xdr.open("POST", url);
-					xdr.onerror = function() {
-						console.log("errro");
-					}
 					xdr.onload = function() {
-						console.log(xdr.responseText);
 						handleResponse(xdr.responseText);
 					};
+					//En IE lo mandamos como JSON porque no se banca headers
+					//aunque lo ideal seria modificar el framework en el back
+					var params = JSON.stringify(err);
 					xdr.send(params);
 				}
 			} catch (e) {
@@ -397,7 +437,6 @@ window.FrontMonitor = (function() {
 	}
 
 	function handleResponse(data) {
-		console.log("handleResponse");
 		if (!Config.pageview) {
 			try {
 				var responseJson = eval("(" + data + ")");
@@ -428,8 +467,6 @@ window.FrontMonitor = (function() {
 	 * Loguea un error custom autogenerado
 	 */
 	function logXHRError(options) {
-		
-	
 		var _options = {
 		   "name" : "AJAX Error",
 		   "message" : "",

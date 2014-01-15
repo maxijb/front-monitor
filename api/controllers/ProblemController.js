@@ -19,7 +19,7 @@ module.exports = {
     Problem.create(req.query, function(err, result) {
 		  res.json(result || err);
     });
-    
+
   }
 
 };

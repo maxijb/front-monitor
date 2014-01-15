@@ -144,6 +144,7 @@ function saveProblem(data, cb) {
 			  cb(error, null); 
 		  }
 		  else 
+        loggers.udp.info("Problem created with id: " + resp.insertId);
 			  cb(null, {pageview : problem.pageview, id: resp.insertId});
 	  }); 
 }
