@@ -144,8 +144,15 @@ function saveProblem(data, cb) {
 			  cb(error, null); 
 		  }
 		  else 
-        loggers.udp.info("Problem created with id: " + resp.insertId);
-			  cb(null, {pageview : problem.pageview, id: resp.insertId});
+        if (resp && resp.insertId) {
+           loggers.udp.info("Problem created with id: " + resp.insertId);
+           cb(null, {pageview : problem.pageview, id: resp.insertId});
+        } else {
+          loggers.udp.warning("MySql response is not complete after problem create");
+          loggers.udp.warning(resp);
+          loggers.udp.warning(problem);
+          cb(null, {pageview : problem.pageview});
+        }
 	  }); 
 }
 
