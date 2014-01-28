@@ -132,7 +132,8 @@ window.FrontMonitor = (function() {
 		uow : defaults.uow || null,
 		custom_parameter : defaults.custom_parameter || null,
 		ready : false,
-		version : FrontMonitorVersion
+		version : FrontMonitorVersion,
+		overrideOn : defaults.overrideOn === false ? false : true
 	};
 	var trackedErrors = [];
 	setWindowOnError();
@@ -147,9 +148,13 @@ window.FrontMonitor = (function() {
 		Config.overrideFunctions = overrideData;
 
 		
+
+
+
+
 	// on document ready
 	window.onDomReadyIdentifierLogger(function() {
-
+		Config.ready = true;
 		setWindowOnError();
 		// override manual entered functions
 		for ( var i in Config.overrideFunctions) {
@@ -157,7 +162,7 @@ window.FrontMonitor = (function() {
 		}
 
 		
-		if (window.jQuery) {
+		if (window.jQuery && Config.overrideOn) {
 			// override jquery.fn.on
 			Config.jQuery_fn_on_original = Config.jQuery_fn_on_original || jQuery.fn.on;
 			jQuery.fn.on = function() {
@@ -175,75 +180,34 @@ window.FrontMonitor = (function() {
 	
 				// If the function is found, then subscribe wrapped event handler
 				// function
-				args[fnArgIdx] = (function(fnOriginHandler) {
-					return function() {
-						var argums = Array.prototype.slice.call(arguments);
-						try {
-							fnOriginHandler.apply(this, arguments);
-						} catch (e) {
-							captureException(argums, e);
-						}
-					};
-				})(args[fnArgIdx]);
+				args[fnArgIdx] = wrapHandler(args[fnArgIdx]);
+				
 	
 				// Call original jQuery.fn.on, with the same list of arguments, but
 				// a function replaced with a proxy.
 				return Config.jQuery_fn_on_original.apply(this, args);
 			};
 		}
-
-		//si es IE nos fijamos si tiene JSON ya que lo necesita
-		//si no lo tiene lo carga y usamos un timeout ya que necesita un tiempo para el 
-		if (window.XDomainRequest) {
-			if (!window.JSON) {
-				loadJSONScript();
-			} else {
-				//IE necesita un tiempo para inicializar el xdomain y que los posts salgan
-				setTimeout(trackingReadyInit, 4000);
-				// trackingReadyInit();
-			}
-		} else {
-			trackingReadyInit();
-		}
-
-
+		//si ya hay errores que los trackee
+		trackAndResetErrors();
 	});
 
+
 	/**
-	*Carga la libreria de JSON para ie 7 y menor
+	* Wrappea localbacks del ON de jquery poniendolos en un try/catch
 	*/
-	function loadJSONScript() {
-		var oHead = document.getElementsByTagName('head')[0];
-		var oScript = document.createElement('script');
-		oScript.type = 'text/javascript';
-		oScript.src = "//cdnjs.cloudflare.com/ajax/libs/json2/20130526/json2.min.js";
-		// most browsers
-		oScript.onload = timeAndLoad;
-		// IE 6 & 7
-		oScript.onreadystatechange = function() {
-			if (this.readyState == 'complete') {
-				timeAndLoad();
-			}
-		}
-		oHead.appendChild(oScript);
+	var wrapHandler = function (fnOriginHandler) {
+                return function() {
+                	var argums = Array.prototype.slice.call(arguments);
+                    try {
+                        return fnOriginHandler.apply(this, arguments);
+                    } catch (e) {
+                       captureException(argums, e);
+                    }
+                };
+            };
 
-		function timeAndLoad() {
-			//IE necesita un tiempo para inicializar el xdomain y que los posts salgan
-			setTimeout(trackingReadyInit, 4000);
-		}
-	}
-
-
-	/**
-	* Starts tarcaking now
-	**/
-	function trackingReadyInit() {
-		Config.ready = true;
-		trackAndResetErrors();
-	}
-
-
-	// oiverride functions
+	// oiverride functions gloables
 	function override(func) {
 		var original = window[func];
 		window[func] = function() {
@@ -368,72 +332,34 @@ window.FrontMonitor = (function() {
 	
 	function trackError(err) {
 		lastEx = err;
-		var params = [];
+		var params = '';
 		for (var k in err) {
-			params.push(k + '=' + encodeURIComponent(err[k]));
+			params += k + '=' + encodeURIComponent(err[k]) + '&';
 		}
-		params = params.join('&');
-
-		//si son hatsa 1900 caracteres lo mandamos por GET
-		if (params.length <= 100) {
-			var url = Config.serviceUrl + '?' + params;
-			
-			try {
-				if (!window.XDomainRequest) {
-					var xhr = new XMLHttpRequest();
-					xhr.open("GET", url, true);
-					xhr.onreadystatechange = function() {
-						if (xhr.readyState == 4) {
-							handleResponse(xhr.responseText);
-						}
-					};
-					xhr.send(null);
-				}
-				else {
-					
-					var xdr = new XDomainRequest();
-					xdr.open("GET", url);
-					xdr.onload = function() {
-						handleResponse(xdr.responseText);
-					};
-					xdr.send();
-				}
-			} catch (e) {
+		var url = Config.serviceUrl + '?' + params.substring(0, params.length -1);
+		
+		try {
+			if (!window.XDomainRequest) {
+				var xhr = new XMLHttpRequest();
+				xhr.open("GET", url, true);
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == 4) {
+						handleResponse(xhr.responseText);
+					}
+				};
+				xhr.send(null);
 			}
-
-
-		//si son mas de 1900 caracteres lo mandamos por post	
-		} else {
-			var url = Config.serviceUrl;
-			try {
-				if (!window.XDomainRequest) {
-					var xhr = new XMLHttpRequest();
-					xhr.open("POST", url, true);
-					xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-					//Send the proper header information along with the request
-					xhr.onreadystatechange = function() {
-						if (xhr.readyState == 4) {
-							handleResponse(xhr.responseText);
-						}
-					};
-
-					xhr.send(params);
-				}
-				else {
-					var xdr = new XDomainRequest();
-					xdr.open("POST", url);
-					xdr.onload = function() {
-						handleResponse(xdr.responseText);
-					};
-					//En IE lo mandamos como JSON porque no se banca headers
-					//aunque lo ideal seria modificar el framework en el back
-					var params = JSON.stringify(err);
-					xdr.send(params);
-				}
-			} catch (e) {
+			else {
+				
+				var xdr = new XDomainRequest();
+				xdr.open("GET", url);
+				xdr.onload = function() {
+					handleResponse(xdr.responseText);
+				};
+				xdr.send();
 			}
+		} catch (e) {
 		}
-
 	}
 
 	function handleResponse(data) {
@@ -467,6 +393,8 @@ window.FrontMonitor = (function() {
 	 * Loguea un error custom autogenerado
 	 */
 	function logXHRError(options) {
+		
+	
 		var _options = {
 		   "name" : "AJAX Error",
 		   "message" : "",
