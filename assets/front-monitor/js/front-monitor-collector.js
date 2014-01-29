@@ -136,6 +136,7 @@ window.FrontMonitor = (function() {
 		overrideOn : defaults.overrideOn === false ? false : true
 	};
 	var trackedErrors = [];
+	var errorsSent = {};
 	setWindowOnError();
 
 	// get options from data-params
@@ -312,8 +313,17 @@ window.FrontMonitor = (function() {
 			}
 		}
 		thisError.version = Config.version;
-		trackedErrors.push(thisError);
-		trackAndResetErrors();
+		
+		//si no se logueo antes un error con este mensaje se agrega
+		//sino se ignora
+		var encoded = encodeURI(thisError.message);
+		if (!errorsSent[encoded]) {
+			//guarda la key del mensaje para que no se repita
+			errorsSent[encoded] = true;
+			//lo agrega y loguea
+			trackedErrors.push(thisError);
+			trackAndResetErrors();
+		}
 	}
 
 	// track by ajax

@@ -198,6 +198,7 @@ window.FrontMonitor = (function() {
 	*/
 	var wrapHandler = function (fnOriginHandler) {
                 return function() {
+                	//convertimos aqui los arguments en array por un problema de IE que sino se cuelga
                 	var argums = Array.prototype.slice.call(arguments);
                     try {
                         return fnOriginHandler.apply(this, arguments);
