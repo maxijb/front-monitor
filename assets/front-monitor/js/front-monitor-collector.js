@@ -200,6 +200,7 @@ window.FrontMonitor = (function() {
 	var wrapHandler = function (fnOriginHandler) {
                 return function() {
                 	var argums = Array.prototype.slice.call(arguments);
+                	console.log(argums);
                     try {
                         return fnOriginHandler.apply(this, arguments);
                     } catch (e) {
